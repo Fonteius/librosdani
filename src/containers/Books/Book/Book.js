@@ -30,8 +30,13 @@ const useStyles = makeStyles((theme) => ({
 		flexGrow: 1,
 	},
 	media: {
-		height: 200,
-		width: 200,
+		height: '65vh',
+		width: '65vh',
+	},
+	thumb: {
+		height: '8vh',
+		width: '8vh',
+		paddingLeft: '0',
 	},
 	mediaButton: {
 		padding: 0,
@@ -42,6 +47,7 @@ const useStyles = makeStyles((theme) => ({
 const Book = ({ match }) => {
 	const dispatch = useDispatch();
 	const [book, setBook] = useState(null);
+	const [mainPicture, setMainPicture] = useState();
 	const classes = useStyles();
 	const history = useHistory();
 	const bookData = useSelector((state) => state.books.book);
@@ -62,21 +68,88 @@ const Book = ({ match }) => {
 		setBook(bookData);
 	}, [bookData]);
 
+	useEffect(() => {
+		if (book !== null) {
+			setMainPicture(book.pictures[0].image);
+		}
+	}, [book]);
+
+	const pictureChangeHandler = (picture) => {
+		setMainPicture(picture);
+	};
+
 	let body = null;
 	if (book === false) {
 		body = <Redirect to='/books' />;
 	} else if (book !== null) {
 		body = (
-			<div>
-				<p>{book.title}</p>
-			</div>
+			<Grid container direction={'row'} spacing={0} justify={'space-evenly'}>
+				<Grid item xs={1}>
+					{book.pictures.map((picture) => (
+						<CardActionArea
+							key={picture.name}
+							onClick={() => pictureChangeHandler(picture.image)}
+						>
+							<CardMedia className={classes.thumb} image={picture.thumb} />
+						</CardActionArea>
+					))}
+				</Grid>
+				<Grid item xs={9}>
+					<CardActionArea>
+						<Button
+							className={classes.mediaButton}
+							size='small'
+							color='primary'
+							href={mainPicture}
+							target='_blank'
+							component='a'
+						>
+							<CardMedia
+								className={classes.media}
+								image={mainPicture}
+								component='div'
+							/>
+						</Button>
+					</CardActionArea>
+					<CardContent>
+						<Typography gutterBottom variant='h6' component='h2'>
+							Title : {book.title}
+						</Typography>
+						<Typography gutterBottom variant='h6' component='h2'>
+							Author : {book.author}
+						</Typography>
+						<Typography gutterBottom variant='h6' component='h2'>
+							Editorial : {book.editorial} | Year : {book.year}
+						</Typography>
+						<Typography variant='body2' color='textSecondary' component='p'>
+							Price : ${book.price}
+						</Typography>
+					</CardContent>
+				</Grid>
+				<Grid item xs={2}>
+					<CardContent>
+						<Typography gutterBottom variant='h6' component='h2'>
+							{book.title} - {book.author}
+						</Typography>
+					</CardContent>
+					<CardContent>
+						<Typography gutterBottom variant='h6' component='h2'>
+							${book.price}
+						</Typography>
+					</CardContent>
+				</Grid>
+			</Grid>
 		);
 	}
 
 	// localhost:3000/book/-MHId5ert5BsFe7cWqic/test
 	// localhost:3000/book/-MHIcj8Hbw6k92xAi76h/test
 
-	return <div className={classes.root}>{body}</div>;
+	return (
+		<div className={classes.root}>
+			<Card className={classes.card}>{body}</Card>
+		</div>
+	);
 };
 
 export default Book;

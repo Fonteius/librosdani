@@ -56,8 +56,8 @@ const Results = () => {
 		onFetchBooks();
 	}, [onFetchBooks]);
 
-	const detailButtonHandler = () => {
-		history.push('/books');
+	const detailButtonHandler = (id, title) => {
+		history.push(`/book/${id}/${title}`);
 	};
 
 	const removeButtonHandler = (bookId) => {
@@ -74,7 +74,7 @@ const Results = () => {
 							className={classes.mediaButton}
 							size='small'
 							color='primary'
-							href={book.pictures[0].image}
+							href={window.location.origin + `/book/${book.id}/${book.title}`}
 							target='_blank'
 						>
 							<CardMedia
@@ -95,7 +95,7 @@ const Results = () => {
 						<Button
 							size='small'
 							color='primary'
-							onClick={() => detailButtonHandler()}
+							onClick={() => detailButtonHandler(book.id, book.title)}
 						>
 							Details
 						</Button>
