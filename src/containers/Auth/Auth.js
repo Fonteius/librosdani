@@ -5,7 +5,6 @@ import { checkValidity } from '../../shared/utility';
 import { makeStyles, Button } from '@material-ui/core';
 import MyInput from '../../components/UI/MyInput/MyInput';
 import * as actions from '../../store/actions/index';
-import './Auth.css';
 
 const useStyles = makeStyles((theme) => ({
 	Auth: {

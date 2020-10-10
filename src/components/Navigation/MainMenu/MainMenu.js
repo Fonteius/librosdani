@@ -1,8 +1,14 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { AppBar, Toolbar, makeStyles, Typography } from '@material-ui/core';
-import { AccountCircle } from '@material-ui/icons';
+import {
+	AppBar,
+	Toolbar,
+	makeStyles,
+	Typography,
+	IconButton,
+} from '@material-ui/core';
+import { Menu, AccountCircle } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -18,6 +24,11 @@ const useStyles = makeStyles((theme) => ({
 		flexGrow: 1,
 		color: 'green',
 		textDecoration: 'none',
+	},
+	menuButton: {
+		[theme.breakpoints.up('lg')]: {
+			display: 'none',
+		},
 	},
 	buttons: {
 		color: 'black',
@@ -58,6 +69,13 @@ const MainMenu = (props) => {
 		<div className={classes.root}>
 			<AppBar position='fixed' className={classes.appBar}>
 				<Toolbar>
+					<IconButton
+						color='primary'
+						className={classes.menuButton}
+						onClick={props.toggleDrawer}
+					>
+						<Menu />
+					</IconButton>
 					<Typography
 						variant='h6'
 						component={NavLink}

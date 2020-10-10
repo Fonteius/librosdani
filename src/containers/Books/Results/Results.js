@@ -21,14 +21,22 @@ const useStyles = makeStyles((theme) => ({
 		marginTop: '60px',
 		marginLeft: '250px',
 		marginRight: '50px',
-		padding: '20px 20px',
+		paddingTop: '20px',
 		width: '80vw',
 		textAlign: 'center',
 		flexGrow: 1,
 		zIndex: 1300,
+		[theme.breakpoints.down('md')]: {
+			marginLeft: '5px',
+			marginRight: '10px',
+			paddingTop: '20px',
+			paddingRight: '10px',
+			width: '99vw',
+		},
 	},
 	card: {
 		flexGrow: 1,
+		maxWidth: 200,
 	},
 	media: {
 		height: 200,
@@ -37,6 +45,9 @@ const useStyles = makeStyles((theme) => ({
 	mediaButton: {
 		padding: 0,
 		margin: 0,
+	},
+	search: {
+		marginRight: '3vh',
 	},
 }));
 

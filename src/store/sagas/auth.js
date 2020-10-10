@@ -23,7 +23,7 @@ export function* authUserSaga(action) {
 		returnSecureToken: true,
 		isSignup: action.isSignup,
 	};
-	const url = 'http://localhost:3001/auth';
+	const url = `${process.env.REACT_APP_SERVER_URL}/auth`;
 	if (action.username.includes('@')) {
 		authData = {
 			email: action.username,
@@ -53,7 +53,6 @@ export function* authUserSaga(action) {
 
 	try {
 		const response = yield axios.post(url, authData);
-		yield console.log(response.data);
 		const expirationDate = yield new Date(
 			new Date().getTime() + response.data.expiresIn * 1000
 		);

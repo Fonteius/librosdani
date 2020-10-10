@@ -1,5 +1,6 @@
 import { put } from 'redux-saga/effects';
-import axios from '../../axios-database';
+import axios from 'axios';
+import database from '../../axios-database';
 import * as actions from '../actions/index';
 
 export function* publishBookSaga(action) {
@@ -10,10 +11,12 @@ export function* publishBookSaga(action) {
 			...action.bookData,
 			pictures: [...images],
 		};
-		const response = yield axios.post(
-			`/books.json?auth=${action.idToken}`,
-			book
-		);
+		const authParam = action.idToken;
+		const response = yield database.post('/books.json', book, {
+			params: {
+				auth: authParam,
+			},
+		});
 		yield put(actions.addBookSuccess(response.data.name, book));
 		yield put(actions.fetchBooks());
 	} catch (error) {
@@ -22,7 +25,7 @@ export function* publishBookSaga(action) {
 }
 
 export function* publishPicturesSaga(files) {
-	const url = 'http://localhost:3001/';
+	const url = `${process.env.REACT_APP_SERVER_URL}/upload`;
 	let picturesUrl = [];
 	let picture = {};
 	let formData;
@@ -38,11 +41,15 @@ export function* publishPicturesSaga(files) {
 		yield formData.append('file', base64);
 		yield formData.append('name', files[i].name);
 		response = yield axios.post(url, formData, config);
+		let medium = null;
+		if (response.data.medium !== undefined) {
+			medium = response.data.medium.url;
+		}
 		yield (picture = {
 			id: response.data.imgId,
 			name: response.data.title,
 			image: response.data.url,
-			medium: response.data.medium.url,
+			medium: medium,
 			thumb: response.data.thumb.url,
 		});
 		yield picturesUrl.push(picture);
@@ -61,7 +68,7 @@ const toBase64 = (file) =>
 export function* updateBookSaga(action) {
 	yield put(actions.updateBookStart());
 	try {
-		yield axios.patch(`/books/${action.bookId}.json`, action.bookData);
+		yield database.patch(`/books/${action.bookId}.json`, action.bookData);
 		yield put(actions.updateBookSuccess(action.bookId, action.bookData));
 		yield put(actions.fetchBooks());
 	} catch (error) {
@@ -72,7 +79,7 @@ export function* updateBookSaga(action) {
 export function* removeBookSaga(action) {
 	yield put(actions.removeBookStart());
 	try {
-		yield axios.delete(`/books/${action.bookId}.json`);
+		yield database.delete(`/books/${action.bookId}.json`);
 		yield put(actions.removeBookSuccess(action.bookId));
 		yield put(actions.fetchBooks());
 	} catch (error) {
@@ -84,7 +91,7 @@ export function* fetchBooksSaga(action) {
 	yield put(actions.fetchBooksStart());
 	const query = action.query ? `?${action.query}` : '';
 	try {
-		const response = yield axios.get(`/books.json${query}`);
+		const response = yield database.get(`/books.json${query}`);
 		const books = [];
 		for (let key in response.data) {
 			books.push({
@@ -101,7 +108,7 @@ export function* fetchBooksSaga(action) {
 export function* fetchBookSaga(action) {
 	yield put(actions.fetchBookStart());
 	try {
-		const response = yield axios.get(`/books/${action.id}.json`);
+		const response = yield database.get(`/books/${action.id}.json`);
 		let book = null;
 		response.data !== null ? (book = response.data) : (book = false);
 		yield put(actions.fetchBookSuccess(book));

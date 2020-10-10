@@ -17,14 +17,26 @@ import * as actions from '../../../store/actions/index';
 const useStyles = makeStyles((theme) => ({
 	root: {
 		display: 'flex',
-		marginTop: '60px',
-		marginLeft: '250px',
-		marginRight: '50px',
-		padding: '20px 20px',
-		width: '80vw',
-		textAlign: 'center',
 		flexGrow: 1,
 		zIndex: 1300,
+		textAlign: 'center',
+		marginTop: '60px',
+		padding: '20px 20px',
+		[theme.breakpoints.down('xl')]: {
+			marginLeft: '250px',
+			marginRight: '50px',
+			width: '80vw',
+		},
+		[theme.breakpoints.down('lg')]: {
+			width: '75vw',
+		},
+		[theme.breakpoints.down('md')]: {
+			marginTop: '60px',
+			marginLeft: '2px',
+			marginRight: '2px',
+			padding: '20px 10px',
+			width: '95vw',
+		},
 	},
 	card: {
 		flexGrow: 1,
@@ -32,6 +44,14 @@ const useStyles = makeStyles((theme) => ({
 	media: {
 		height: '65vh',
 		width: '65vh',
+		[theme.breakpoints.down('md')]: {
+			height: '55vh',
+			width: '55vh',
+		},
+		[theme.breakpoints.down('sm')]: {
+			height: '35vh',
+			width: '35vh',
+		},
 	},
 	thumb: {
 		height: '8vh',
@@ -58,6 +78,7 @@ const Book = ({ match }) => {
 
 	const onFetchBook = useCallback(() => dispatch(actions.fetchBook(bookId)), [
 		dispatch,
+		bookId,
 	]);
 
 	useEffect(() => {

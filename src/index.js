@@ -4,12 +4,17 @@ import { BrowserRouter } from 'react-router-dom';
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
+import {
+	unstable_createMuiStrictModeTheme as createMuiTheme,
+	ThemeProvider,
+	colors,
+} from '@material-ui/core';
 import './index.css';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
 import authReducer from './store/reducers/auth';
 import bookReducer from './store/reducers/book';
 import { watchAuth, watchBook } from './store/sagas/index';
+import * as serviceWorker from './serviceWorker';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const rootReducer = combineReducers({
@@ -26,11 +31,26 @@ const store = createStore(
 sagaMiddleware.run(watchAuth);
 sagaMiddleware.run(watchBook);
 
+//TODO: Generate theme with CSS variables for all components that depend on elements sizes like Drawer or AppBar.
+const theme = createMuiTheme({
+	palette: {
+		primary: {
+			main: colors.green[500],
+		},
+		type: 'dark',
+	},
+	drawer: {
+		width: 200,
+	},
+});
+
 const app = (
 	<React.StrictMode>
 		<Provider store={store}>
 			<BrowserRouter>
-				<App />
+				<ThemeProvider theme={theme}>
+					<App />
+				</ThemeProvider>
 			</BrowserRouter>
 		</Provider>
 	</React.StrictMode>

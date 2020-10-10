@@ -8,8 +8,12 @@
 # testing
 /coverage
 
+# development
+.env.development
+
 # production
 /build
+.env.production
 
 # backend
 /server

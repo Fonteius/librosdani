@@ -143,7 +143,6 @@ const PublishForm = () => {
 		for (let key in updatedControls) {
 			formIsValid = updatedControls[key].valid && formIsValid;
 		}
-		console.log(updatedControls.price.value);
 		setBookForm(updatedControls);
 		setFormIsValid(formIsValid);
 	};
