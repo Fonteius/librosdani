@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, Redirect } from 'react-router-dom';
+import { /*useHistory,*/ Redirect } from 'react-router-dom';
 import {
 	makeStyles,
 	Card,
 	CardActionArea,
-	CardActions,
+	// CardActions,
 	CardContent,
 	CardMedia,
 	Button,
@@ -69,11 +69,11 @@ const Book = ({ match }) => {
 	const [book, setBook] = useState(null);
 	const [mainPicture, setMainPicture] = useState();
 	const classes = useStyles();
-	const history = useHistory();
+	// const history = useHistory();
 	const bookData = useSelector((state) => state.books.book);
 
 	const {
-		params: { bookId, title },
+		params: { bookId },
 	} = match;
 
 	const onFetchBook = useCallback(() => dispatch(actions.fetchBook(bookId)), [

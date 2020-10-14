@@ -84,6 +84,12 @@ const Auth = (props) => {
 		[dispatch]
 	);
 
+	const { signUp } = props.location;
+	useEffect(() => {
+		setIsSignup(signUp);
+		usernameInput.current.focus();
+	}, [signUp]);
+
 	useEffect(() => {
 		if (authRedirectPath !== '/books') {
 			onSetAuthRedirectPath();

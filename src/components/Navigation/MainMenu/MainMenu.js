@@ -1,14 +1,22 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import {
 	AppBar,
 	Toolbar,
 	makeStyles,
 	Typography,
 	IconButton,
+	Avatar,
+	Paper,
+	Popper,
+	Grow,
+	Button,
+	MenuList,
+	MenuItem,
+	ClickAwayListener,
 } from '@material-ui/core';
-import { Menu, AccountCircle } from '@material-ui/icons';
+import { Menu as MenuIcon } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -33,34 +41,132 @@ const useStyles = makeStyles((theme) => ({
 	buttons: {
 		color: 'black',
 		textDecoration: 'none',
+		marginRight: theme.spacing(2),
 	},
 	icons: {
 		color: 'green',
 	},
+	avatar: {
+		width: theme.spacing(4),
+		height: theme.spacing(4),
+		marginRight: theme.spacing(1),
+	},
+	paper: {
+		marginRight: theme.spacing(2),
+	},
 }));
 
 const MainMenu = (props) => {
+	const [menuOpen, setMenuOpen] = useState(false);
+	const menuAnchorRef = useRef();
+	const prevOpen = useRef(menuOpen);
 	const isAuthenticated = useSelector((state) => state.auth.idToken !== null);
+	const { username, avatar } = useSelector((state) => state.auth);
+	const history = useHistory();
 	const classes = useStyles();
+	const menuToggleHandler = () => {
+		setMenuOpen((prevOpen) => !prevOpen);
+	};
+
+	const menuCloseHandler = (e) => {
+		if (menuAnchorRef.current && menuAnchorRef.current.contains(e.target)) {
+			return;
+		}
+		setMenuOpen(false);
+	};
+
+	const listKeyDownHandler = (e) => {
+		if (e.key === 'Tab') {
+			e.preventDefault();
+			setMenuOpen(false);
+		}
+	};
+
+	useEffect(() => {
+		if (prevOpen.current === true && menuOpen === false) {
+			menuAnchorRef.current.focus();
+		}
+		prevOpen.current = menuOpen;
+	}, [menuOpen]);
 
 	let navLinks = (
 		<React.Fragment>
-			<Typography component={NavLink} to='/auth' className={classes.buttons}>
+			<Typography
+				component={NavLink}
+				to={{ pathname: '/auth', signUp: false }}
+				className={classes.buttons}
+			>
 				Login
+			</Typography>
+			<Typography
+				component={NavLink}
+				to={{ pathname: '/auth', signUp: true }}
+				className={classes.buttons}
+			>
+				Sign Up
 			</Typography>
 		</React.Fragment>
 	);
 	if (isAuthenticated) {
 		navLinks = (
 			<React.Fragment>
-				<AccountCircle className={classes.icons} />
-				<Typography
-					component={NavLink}
-					to='/logout'
-					className={classes.buttons}
+				<Button
+					ref={menuAnchorRef}
+					aria-controls={menuOpen ? 'menuListGrow' : null}
+					aria-haspopup='true'
+					onClick={menuToggleHandler}
 				>
-					Log Out
-				</Typography>
+					<Avatar
+						alt={username !== null ? username : 'Test'}
+						src={avatar}
+						className={classes.avatar}
+					/>
+					<Typography className={classes.buttons}>{username}</Typography>
+				</Button>
+				<Popper
+					open={menuOpen}
+					anchorEl={menuAnchorRef.current}
+					role={undefined}
+					transition
+					disablePortal
+				>
+					{({ TransitionProps, placement }) => (
+						<Grow
+							{...TransitionProps}
+							style={{
+								transformOrigin:
+									placement === 'bottom' ? 'center top' : 'center bottom',
+							}}
+						>
+							<Paper>
+								<ClickAwayListener onClickAway={menuCloseHandler}>
+									<MenuList
+										id='menuListGrow'
+										autoFocusItem={menuOpen}
+										onKeyDown={listKeyDownHandler}
+									>
+										<MenuItem
+											onClick={(e) => {
+												history.push('/user');
+												menuCloseHandler(e);
+											}}
+										>
+											Profile
+										</MenuItem>
+										<MenuItem
+											onClick={(e) => {
+												history.push('/logout');
+												menuCloseHandler(e);
+											}}
+										>
+											Logout
+										</MenuItem>
+									</MenuList>
+								</ClickAwayListener>
+							</Paper>
+						</Grow>
+					)}
+				</Popper>
 			</React.Fragment>
 		);
 	}
@@ -74,7 +180,7 @@ const MainMenu = (props) => {
 						className={classes.menuButton}
 						onClick={props.toggleDrawer}
 					>
-						<Menu />
+						<MenuIcon />
 					</IconButton>
 					<Typography
 						variant='h6'

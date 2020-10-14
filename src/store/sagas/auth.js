@@ -3,6 +3,8 @@ import axios from 'axios';
 import database from '../../axios-database';
 import * as actions from '../actions/index';
 
+const serverUrl = process.env.REACT_APP_SERVER_URL;
+
 export function* logoutSaga(action) {
 	yield localStorage.removeItem('idToken');
 	yield localStorage.removeItem('expirationDate');
@@ -23,7 +25,7 @@ export function* authUserSaga(action) {
 		returnSecureToken: true,
 		isSignup: action.isSignup,
 	};
-	const url = `${process.env.REACT_APP_SERVER_URL}/auth`;
+
 	if (action.username.includes('@')) {
 		authData = {
 			email: action.username,
@@ -52,19 +54,28 @@ export function* authUserSaga(action) {
 	}
 
 	try {
-		const response = yield axios.post(url, authData);
+		const response = yield axios.post(serverUrl + '/auth', authData);
 		const expirationDate = yield new Date(
 			new Date().getTime() + response.data.expiresIn * 1000
 		);
 		yield localStorage.setItem('idToken', response.data.idToken);
 		yield localStorage.setItem('expirationDate', expirationDate);
 		yield localStorage.setItem('userId', response.data.localId);
+		const userData = yield axios.post(serverUrl + '/user', {
+			idToken: response.data.idToken,
+		});
 		yield put(
-			actions.authSuccess(response.data.idToken, response.data.localId)
+			actions.authSuccess(
+				userData.data.users[0].displayName,
+				userData.data.users[0].email,
+				response.data.idToken,
+				response.data.localId,
+				userData.data.users[0].photoUrl
+			)
 		);
 		yield put(actions.checkAuthTimeout(response.data.expiresIn));
 	} catch (error) {
-		yield put(actions.authFail(error.response.data.error));
+		yield put(actions.authFail(error));
 	}
 }
 
@@ -78,7 +89,18 @@ export function* authCheckStateSaga() {
 		);
 		if (expirationDate > new Date()) {
 			const userId = yield localStorage.getItem('userId');
-			yield put(actions.authSuccess(token, userId));
+			const userData = yield axios.post(serverUrl + '/user', {
+				idToken: token,
+			});
+			yield put(
+				actions.authSuccess(
+					userData.data.users[0].displayName,
+					userData.data.users[0].email,
+					token,
+					userId,
+					userData.data.users[0].photoUrl
+				)
+			);
 			yield put(
 				actions.checkAuthTimeout(
 					(expirationDate.getTime() - new Date().getTime()) / 1000
