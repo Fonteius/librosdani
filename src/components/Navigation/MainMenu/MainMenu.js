@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink, useHistory } from 'react-router-dom';
 import {
@@ -15,6 +15,7 @@ import {
 	MenuList,
 	MenuItem,
 	ClickAwayListener,
+	colors,
 } from '@material-ui/core';
 import { Menu as MenuIcon } from '@material-ui/icons';
 
@@ -22,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
 	root: {
 		flexGrow: 1,
 		color: 'black',
+		width: '100vw',
 	},
 	appBar: {
 		zIndex: theme.zIndex.drawer + 1,
@@ -30,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	title: {
 		flexGrow: 1,
-		color: 'green',
+		color: theme.palette.primary.main,
 		textDecoration: 'none',
 	},
 	menuButton: {
@@ -54,6 +56,10 @@ const useStyles = makeStyles((theme) => ({
 	paper: {
 		marginRight: theme.spacing(2),
 	},
+	green: {
+		color: theme.palette.getContrastText(colors.green[500]),
+		backgroundColor: colors.green[500],
+	},
 }));
 
 const MainMenu = (props) => {
@@ -61,7 +67,7 @@ const MainMenu = (props) => {
 	const menuAnchorRef = useRef();
 	const prevOpen = useRef(menuOpen);
 	const isAuthenticated = useSelector((state) => state.auth.idToken !== null);
-	const { username, avatar } = useSelector((state) => state.auth);
+	const { username, email, avatar } = useSelector((state) => state.auth);
 	const history = useHistory();
 	const classes = useStyles();
 	const menuToggleHandler = () => {
@@ -90,26 +96,40 @@ const MainMenu = (props) => {
 	}, [menuOpen]);
 
 	let navLinks = (
-		<React.Fragment>
-			<Typography
-				component={NavLink}
-				to={{ pathname: '/auth', signUp: false }}
-				className={classes.buttons}
-			>
+		<Fragment>
+			<Typography component={NavLink} to='/books' className={classes.buttons}>
+				Books
+			</Typography>
+		</Fragment>
+	);
+
+	let authLinks = (
+		<Fragment>
+			<Typography component={NavLink} to='/login' className={classes.buttons}>
 				Login
 			</Typography>
-			<Typography
-				component={NavLink}
-				to={{ pathname: '/auth', signUp: true }}
-				className={classes.buttons}
-			>
+			<Typography component={NavLink} to='/signup' className={classes.buttons}>
 				Sign Up
 			</Typography>
-		</React.Fragment>
+		</Fragment>
 	);
 	if (isAuthenticated) {
 		navLinks = (
-			<React.Fragment>
+			<Fragment>
+				<Typography component={NavLink} to='/books' className={classes.buttons}>
+					Books
+				</Typography>
+				<Typography
+					component={NavLink}
+					to='/publish'
+					className={classes.buttons}
+				>
+					Publish
+				</Typography>
+			</Fragment>
+		);
+		authLinks = (
+			<Fragment>
 				<Button
 					ref={menuAnchorRef}
 					aria-controls={menuOpen ? 'menuListGrow' : null}
@@ -117,11 +137,18 @@ const MainMenu = (props) => {
 					onClick={menuToggleHandler}
 				>
 					<Avatar
-						alt={username !== null ? username : 'Test'}
+						alt={username || email}
 						src={avatar}
-						className={classes.avatar}
-					/>
-					<Typography className={classes.buttons}>{username}</Typography>
+						className={`${classes.avatar} ${classes.green}`}
+					>
+						{(username || email).substring(0, 1)}
+					</Avatar>
+					<Typography
+						className={classes.buttons}
+						style={{ textTransform: 'lowercase' }}
+					>
+						{username || email}
+					</Typography>
 				</Button>
 				<Popper
 					open={menuOpen}
@@ -167,13 +194,13 @@ const MainMenu = (props) => {
 						</Grow>
 					)}
 				</Popper>
-			</React.Fragment>
+			</Fragment>
 		);
 	}
 
 	return (
 		<div className={classes.root}>
-			<AppBar position='fixed' className={classes.appBar}>
+			<AppBar position='sticky' className={classes.appBar}>
 				<Toolbar>
 					<IconButton
 						color='primary'
@@ -191,6 +218,7 @@ const MainMenu = (props) => {
 						Libros Dani
 					</Typography>
 					{navLinks}
+					{authLinks}
 				</Toolbar>
 			</AppBar>
 		</div>

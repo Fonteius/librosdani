@@ -18,20 +18,13 @@ import * as actions from '../../../store/actions/index';
 const useStyles = makeStyles((theme) => ({
 	root: {
 		display: 'flex',
-		marginTop: '60px',
-		marginLeft: '250px',
-		marginRight: '50px',
-		paddingTop: '20px',
-		width: '80vw',
+		margin: '0 1% 0 3%',
+		width: '95vw',
 		textAlign: 'center',
 		flexGrow: 1,
 		zIndex: 1300,
-		[theme.breakpoints.down('md')]: {
-			marginLeft: '5px',
-			marginRight: '10px',
-			paddingTop: '20px',
-			paddingRight: '10px',
-			width: '99vw',
+		[theme.breakpoints.down('xs')]: {
+			margin: '0 1% 0 2%',
 		},
 	},
 	card: {

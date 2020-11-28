@@ -20,23 +20,9 @@ const useStyles = makeStyles((theme) => ({
 		flexGrow: 1,
 		zIndex: 1300,
 		textAlign: 'center',
-		marginTop: '60px',
-		padding: '20px 20px',
-		[theme.breakpoints.down('xl')]: {
-			marginLeft: '250px',
-			marginRight: '50px',
-			width: '80vw',
-		},
-		[theme.breakpoints.down('lg')]: {
-			width: '75vw',
-		},
-		[theme.breakpoints.down('md')]: {
-			marginTop: '60px',
-			marginLeft: '2px',
-			marginRight: '2px',
-			padding: '20px 10px',
-			width: '95vw',
-		},
+		margin: '0 1% 0 3%',
+		width: '95vw',
+		height: '90vh',
 	},
 	card: {
 		flexGrow: 1,
@@ -52,11 +38,23 @@ const useStyles = makeStyles((theme) => ({
 			height: '35vh',
 			width: '35vh',
 		},
+		[theme.breakpoints.down('xs')]: {
+			height: '25vh',
+			width: '25vh',
+		},
 	},
 	thumb: {
 		height: '8vh',
 		width: '8vh',
 		paddingLeft: '0',
+		[theme.breakpoints.down('sm')]: {
+			height: '5vh',
+			width: '5vh',
+		},
+		[theme.breakpoints.down('xs')]: {
+			height: '4vh',
+			width: '4vh',
+		},
 	},
 	mediaButton: {
 		padding: 0,
@@ -115,7 +113,7 @@ const Book = ({ match }) => {
 						</CardActionArea>
 					))}
 				</Grid>
-				<Grid item xs={9}>
+				<Grid item xs={7}>
 					<CardActionArea>
 						<Button
 							className={classes.mediaButton}
@@ -142,12 +140,9 @@ const Book = ({ match }) => {
 						<Typography gutterBottom variant='h6' component='h2'>
 							Editorial : {book.editorial} | Year : {book.year}
 						</Typography>
-						<Typography variant='body2' color='textSecondary' component='p'>
-							Price : ${book.price}
-						</Typography>
 					</CardContent>
 				</Grid>
-				<Grid item xs={2}>
+				<Grid item xs={4}>
 					<CardContent>
 						<Typography gutterBottom variant='h6' component='h2'>
 							{book.title} - {book.author}

@@ -45,6 +45,7 @@ const SideDrawer = (props) => {
 	const drawer = (
 		<div>
 			<Toolbar />
+			<Divider />
 			<List>
 				{links.map((text, index) => (
 					<ListItem
@@ -71,7 +72,7 @@ const SideDrawer = (props) => {
 	const container = window !== undefined ? window.document.body : undefined;
 	return (
 		<div>
-			<Hidden mdDown implementation='css'>
+			{/* <Hidden mdDown implementation='css'>
 				<Drawer
 					variant='permanent'
 					className={classes.drawer}
@@ -79,7 +80,7 @@ const SideDrawer = (props) => {
 				>
 					{drawer}
 				</Drawer>
-			</Hidden>
+			</Hidden> */}
 			<Hidden xsUp implementation='css'>
 				<Drawer
 					container={container}
