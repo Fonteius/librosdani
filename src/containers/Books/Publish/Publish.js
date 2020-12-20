@@ -19,6 +19,7 @@ import {
 	Typography,
 	Container,
 	makeStyles,
+	CircularProgress,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import PublishOutlinedIcon from '@material-ui/icons/PublishOutlined';
@@ -74,6 +75,13 @@ const useStyles = makeStyles((theme) => ({
 	submit: {
 		margin: theme.spacing(3, 0, 2),
 	},
+	progress: {
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+		marginTop: -12,
+		marginLeft: -12,
+	},
 }));
 
 const Publish = () => {
@@ -81,6 +89,7 @@ const Publish = () => {
 	let imageInputRef = useRef(null);
 	const [images, setImages] = useState(null);
 	const idToken = useSelector((state) => state.auth.idToken);
+	const loading = useSelector((state) => state.books.loading);
 	const { register, handleSubmit, errors } = useForm();
 
 	const dispatch = useDispatch();
@@ -103,7 +112,6 @@ const Publish = () => {
 			year: data.year,
 			pictures: [...images],
 		};
-		// const formData = { images: { ...images }, ...data };
 		onPublishBook(idToken, book);
 	};
 
@@ -274,7 +282,6 @@ const Publish = () => {
 							label='Price'
 							name='price'
 							autoComplete='price'
-							autoFocus
 						/>
 						{errors.price && (
 							<Alert variant='outlined' severity='error'>
@@ -318,7 +325,6 @@ const Publish = () => {
 							label='Year'
 							name='year'
 							autoComplete='year'
-							autoFocus
 						/>
 						{errors.year && (
 							<Alert variant='outlined' severity='error'>
@@ -334,16 +340,20 @@ const Publish = () => {
 									defaultValue={false}
 								/>
 							}
-							label='Publish Similar'
+							label='Remember Selections'
 						/>
 						<Button
 							type='submit'
 							fullWidth
 							variant='contained'
 							color='primary'
+							disabled={loading}
 							className={classes.submit}
 						>
 							Publish
+							{loading && (
+								<CircularProgress size={24} className={classes.progress} />
+							)}
 						</Button>
 					</form>
 				</div>

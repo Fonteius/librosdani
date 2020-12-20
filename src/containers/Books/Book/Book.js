@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { /*useHistory,*/ Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import {
 	makeStyles,
 	Card,
 	CardActionArea,
-	// CardActions,
 	CardContent,
 	CardMedia,
 	Button,
 	Typography,
 	Grid,
+	CssBaseline,
+	Container,
 } from '@material-ui/core';
 import * as actions from '../../../store/actions/index';
 
@@ -20,40 +21,43 @@ const useStyles = makeStyles((theme) => ({
 		flexGrow: 1,
 		zIndex: 1300,
 		textAlign: 'center',
-		margin: '0 1% 0 3%',
-		width: '95vw',
-		height: '90vh',
+		paddingTop: theme.spacing(3),
+		width: '100vw',
 	},
 	card: {
 		flexGrow: 1,
 	},
 	media: {
-		height: '65vh',
-		width: '65vh',
+		height: '70vh',
+		width: '70vh',
 		[theme.breakpoints.down('md')]: {
-			height: '55vh',
-			width: '55vh',
-		},
-		[theme.breakpoints.down('sm')]: {
 			height: '35vh',
 			width: '35vh',
 		},
+		[theme.breakpoints.down('sm')]: {
+			height: '20vh',
+			width: '20vh',
+		},
 		[theme.breakpoints.down('xs')]: {
-			height: '25vh',
-			width: '25vh',
+			height: '20vh',
+			width: '20vh',
 		},
 	},
 	thumb: {
 		height: '8vh',
 		width: '8vh',
 		paddingLeft: '0',
-		[theme.breakpoints.down('sm')]: {
-			height: '5vh',
-			width: '5vh',
-		},
-		[theme.breakpoints.down('xs')]: {
+		[theme.breakpoints.down('md')]: {
 			height: '4vh',
 			width: '4vh',
+		},
+		[theme.breakpoints.down('sm')]: {
+			height: '2vh',
+			width: '2vh',
+		},
+		[theme.breakpoints.down('xs')]: {
+			height: '2vh',
+			width: '2vh',
 		},
 	},
 	mediaButton: {
@@ -158,12 +162,12 @@ const Book = ({ match }) => {
 		);
 	}
 
-	// localhost:3000/book/-MHId5ert5BsFe7cWqic/test
-	// localhost:3000/book/-MHIcj8Hbw6k92xAi76h/test
-
 	return (
 		<div className={classes.root}>
-			<Card className={classes.card}>{body}</Card>
+			<CssBaseline />
+			<Container maxWidth={false}>
+				<Card className={classes.card}>{body}</Card>
+			</Container>
 		</div>
 	);
 };

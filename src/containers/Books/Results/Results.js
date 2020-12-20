@@ -11,29 +11,34 @@ import {
 	Button,
 	Typography,
 	Grid,
+	CssBaseline,
+	Container,
 } from '@material-ui/core';
 import Search from '../Search/Search';
 import * as actions from '../../../store/actions/index';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
+		width: '100vw',
 		display: 'flex',
-		margin: '0 1% 0 3%',
-		width: '95vw',
 		textAlign: 'center',
 		flexGrow: 1,
 		zIndex: 1300,
-		[theme.breakpoints.down('xs')]: {
-			margin: '0 1% 0 2%',
-		},
+		paddingTop: theme.spacing(1),
+		paddingBottom: theme.spacing(2),
 	},
 	card: {
-		flexGrow: 1,
-		maxWidth: 200,
+		height: '100%',
+		display: 'flex',
+		flexDirection: 'column',
 	},
 	media: {
-		height: 200,
-		width: 200,
+		paddingTop: '56.25%', // 16:9
+		height: '100%',
+		width: '100%',
+	},
+	content: {
+		flexGrow: 1,
 	},
 	mediaButton: {
 		padding: 0,
@@ -70,65 +75,61 @@ const Results = () => {
 
 	let books = [];
 	books = allBooks.books.map((book) => (
-		<Grid key={book.id} item>
-			<Grid item>
-				<Card className={classes.card}>
-					<CardActionArea>
-						<Button
-							className={classes.mediaButton}
-							size='small'
-							color='primary'
-							href={window.location.origin + `/book/${book.id}/${book.title}`}
-							target='_blank'
-						>
-							<CardMedia
-								className={classes.media}
-								image={book.pictures[0].image}
-							/>
-						</Button>
-						<CardContent>
-							<Typography gutterBottom variant='h6' component='h2'>
-								{book.title}
-							</Typography>
-							<Typography variant='body2' color='textSecondary' component='p'>
-								${book.price}
-							</Typography>
-						</CardContent>
-					</CardActionArea>
-					<CardActions>
-						<Button
-							size='small'
-							color='primary'
-							onClick={() => detailButtonHandler(book.id, book.title)}
-						>
-							Details
-						</Button>
-						<Button
-							size='small'
-							color='primary'
-							onClick={() => removeButtonHandler(book.id)}
-						>
-							Remove
-						</Button>
-					</CardActions>
-				</Card>
-			</Grid>
+		<Grid key={book.id} item xs={12} sm={6} md={4}>
+			<Card className={classes.card}>
+				<Button
+					className={classes.mediaButton}
+					size='small'
+					color='primary'
+					href={window.location.origin + `/book/${book.id}/${book.title}`}
+					target='_blank'
+				>
+					<CardMedia className={classes.media} image={book.pictures[0].image} />
+				</Button>
+				<CardContent className={classes.content}>
+					<Typography gutterBottom variant='h6' component='h2'>
+						{book.title}
+					</Typography>
+					<Typography variant='body2' color='textSecondary' component='p'>
+						${book.price}
+					</Typography>
+				</CardContent>
+				<CardActions>
+					<Button
+						size='small'
+						color='primary'
+						onClick={() => detailButtonHandler(book.id, book.title)}
+					>
+						Details
+					</Button>
+					<Button
+						size='small'
+						color='primary'
+						onClick={() => removeButtonHandler(book.id)}
+					>
+						Remove
+					</Button>
+				</CardActions>
+			</Card>
 		</Grid>
 	));
 
 	return (
 		<div className={classes.root}>
-			<Grid container direction='column' spacing={3}>
-				<Grid key='search' item>
-					<Typography variant='h5'>Book List</Typography>
-					<Search />
-				</Grid>
-				<Grid key='contents' item>
-					<Grid container direction='row' spacing={3} justify={'space-evenly'}>
-						{books}
+			<CssBaseline />
+			<Container>
+				<Grid container direction='column' spacing={3}>
+					<Grid key='search' item>
+						<Typography variant='h5'>Book List</Typography>
+						<Search />
+					</Grid>
+					<Grid key='contents' item>
+						<Grid container spacing={3}>
+							{books}
+						</Grid>
 					</Grid>
 				</Grid>
-			</Grid>
+			</Container>
 		</div>
 	);
 };

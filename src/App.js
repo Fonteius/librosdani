@@ -1,19 +1,18 @@
 import React, { Suspense, lazy, useEffect, useCallback } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { LinearProgress } from '@material-ui/core';
+import Main from './containers/Main/Main';
 import Layout from './hoc/Layout/Layout';
+import Login from './containers/Auth/Login';
+import Signup from './containers/Auth/Signup';
+import Books from './containers/Books/Books';
+import Publish from './containers/Books/Publish/Publish';
 import * as actions from './store/actions/index';
 
-const Main = lazy(() => import('./containers/Main/Main'));
-
 const User = lazy(() => import('./containers/User/User'));
-const Login = lazy(() => import('./containers/Auth/Login'));
-const Signup = lazy(() => import('./containers/Auth/Signup'));
 const Logout = lazy(() => import('./containers/Auth/Logout/Logout'));
-
-const Results = lazy(() => import('./containers/Books/Results/Results'));
 const Book = lazy(() => import('./containers/Books/Book/Book'));
-const Publish = lazy(() => import('./containers/Books/Publish/Publish'));
 
 const App = () => {
 	const dispatch = useDispatch();
@@ -27,13 +26,23 @@ const App = () => {
 		onTryAutoSignup();
 	}, [onTryAutoSignup]);
 
+	// useEffect(() => {
+	// 	let hasScrollbar = window.innerWidth > document.documentElement.clientWidth;
+	// 	console.log('Window InnerWith : ', window.innerWidth);
+	// 	console.log(
+	// 		'DocumentElement ClientWith : ',
+	// 		document.documentElement.clientWidth
+	// 	);
+	// 	console.log('HasScrollBar : ', hasScrollbar);
+	// }, []);
+
 	let routes = (
-		<Suspense fallback={<div>Loading...</div>}>
+		<Suspense fallback={<LinearProgress />}>
 			<Switch>
 				<Route path='/login' component={Login} />
 				<Route path='/signup' component={Signup} />
 				<Route path='/book/:bookId/:title' component={Book} />
-				<Route path='/books' component={Results} />
+				<Route path='/books' component={Books} />
 				<Route path='/' exact component={Main} />
 				<Redirect to='/' />
 			</Switch>
@@ -42,13 +51,13 @@ const App = () => {
 
 	if (isAuthenticated) {
 		routes = (
-			<Suspense fallback={<div>Loading...</div>}>
+			<Suspense fallback={<LinearProgress />}>
 				<Switch>
 					<Route path='/logout' component={Logout} />
 					<Route path='/user' component={User} />
 					<Route path='/publish' component={Publish} />
 					<Route path='/book/:bookId/:title' component={Book} />
-					<Route path='/books' component={Results} />
+					<Route path='/books' component={Books} />
 					<Route path='/' exact component={Main} />
 					<Redirect to='/' />
 				</Switch>

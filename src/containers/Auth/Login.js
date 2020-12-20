@@ -13,6 +13,7 @@ import {
 	Grid,
 	Typography,
 	Container,
+	CircularProgress,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -20,7 +21,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import * as actions from '../../store/actions/index';
 
 const useStyles = makeStyles((theme) => ({
+	root: {
+		width: '100vw',
+	},
 	paper: {
+		width: '100%',
 		marginTop: theme.spacing(8),
 		display: 'flex',
 		flexDirection: 'column',
@@ -37,11 +42,19 @@ const useStyles = makeStyles((theme) => ({
 	submit: {
 		margin: theme.spacing(3, 0, 2),
 	},
+	progress: {
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+		marginTop: -12,
+		marginLeft: -12,
+	},
 }));
 
 const Login = () => {
 	const dispatch = useDispatch();
 	const isAuthenticated = useSelector((state) => state.auth.idToken !== null);
+	const loading = useSelector((state) => state.auth.loading);
 	const classes = useStyles();
 	const { register, handleSubmit, errors } = useForm();
 
@@ -54,7 +67,7 @@ const Login = () => {
 	let authRedirect = <Redirect to='/books' />;
 
 	return (
-		<>
+		<div className={classes.root}>
 			{isAuthenticated ? authRedirect : null}
 			<Container component='main' maxWidth='xs'>
 				<CssBaseline />
@@ -132,9 +145,13 @@ const Login = () => {
 							fullWidth
 							variant='contained'
 							color='primary'
+							disabled={loading}
 							className={classes.submit}
 						>
 							Login
+							{loading && (
+								<CircularProgress size={24} className={classes.progress} />
+							)}
 						</Button>
 						<Grid container>
 							<Grid item xs>
@@ -151,7 +168,7 @@ const Login = () => {
 					</form>
 				</div>
 			</Container>
-		</>
+		</div>
 	);
 };
 
