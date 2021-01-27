@@ -16,6 +16,7 @@ import {
 	MenuItem,
 	ClickAwayListener,
 	colors,
+	Hidden,
 } from '@material-ui/core';
 import { Menu as MenuIcon } from '@material-ui/icons';
 
@@ -31,6 +32,8 @@ const useStyles = makeStyles((theme) => ({
 		boxShadow: '0 0 0 1px #263238',
 	},
 	title: {
+		paddingLeft: theme.spacing(8),
+		// paddingRight: theme.spacing(15),
 		flexGrow: 1,
 		color: theme.palette.primary.main,
 		textDecoration: 'none',
@@ -41,9 +44,15 @@ const useStyles = makeStyles((theme) => ({
 		},
 	},
 	buttons: {
-		color: 'black',
+		color: '#00BAFF',
 		textDecoration: 'none',
+		textTransform: 'capitalize',
 		marginRight: theme.spacing(2),
+		borderRadius: '25px',
+	},
+	navLinks: {
+		letterSpacing: '1px',
+		flexGrow: 1,
 	},
 	icons: {
 		color: 'green',
@@ -97,34 +106,54 @@ const MainMenu = (props) => {
 
 	let navLinks = (
 		<Fragment>
-			<Typography component={NavLink} to='/books' className={classes.buttons}>
-				Books
+			<Typography
+				component={NavLink}
+				to='/books'
+				className={`${classes.buttons} ${classes.navLinks}`}
+			>
+				BOOKS
 			</Typography>
 		</Fragment>
 	);
 
 	let authLinks = (
 		<Fragment>
-			<Typography component={NavLink} to='/login' className={classes.buttons}>
+			<Button
+				component={NavLink}
+				to='/login'
+				variant='outlined'
+				color='primary'
+				className={classes.buttons}
+			>
 				Login
-			</Typography>
-			<Typography component={NavLink} to='/signup' className={classes.buttons}>
+			</Button>
+			<Button
+				component={NavLink}
+				to='/signup'
+				variant='outlined'
+				color='primary'
+				className={classes.buttons}
+			>
 				Sign Up
-			</Typography>
+			</Button>
 		</Fragment>
 	);
 	if (isAuthenticated) {
 		navLinks = (
 			<Fragment>
-				<Typography component={NavLink} to='/books' className={classes.buttons}>
-					Books
+				<Typography
+					component={NavLink}
+					to='/books'
+					className={`${classes.buttons} ${classes.navLinks}`}
+				>
+					BOOKS
 				</Typography>
 				<Typography
 					component={NavLink}
 					to='/publish'
-					className={classes.buttons}
+					className={`${classes.buttons} ${classes.navLinks}`}
 				>
-					Publish
+					PUBLISH
 				</Typography>
 			</Fragment>
 		);
@@ -200,7 +229,7 @@ const MainMenu = (props) => {
 
 	return (
 		<div className={classes.root}>
-			<AppBar position='sticky' className={classes.appBar}>
+			<AppBar position='fixed' className={classes.appBar}>
 				<Toolbar>
 					<IconButton
 						color='primary'
@@ -217,8 +246,10 @@ const MainMenu = (props) => {
 					>
 						Libros Dani
 					</Typography>
-					{navLinks}
-					{authLinks}
+					<Hidden xsDown>
+						{navLinks}
+						{authLinks}
+					</Hidden>
 				</Toolbar>
 			</AppBar>
 		</div>

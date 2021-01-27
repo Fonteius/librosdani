@@ -35,7 +35,8 @@ sagaMiddleware.run(watchBook);
 const theme = createMuiTheme({
 	palette: {
 		primary: {
-			main: colors.green[500],
+			// main: '#1E3462',
+			main: '#00BAFF',
 		},
 		type: 'dark',
 	},

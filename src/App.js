@@ -1,7 +1,7 @@
 import React, { Suspense, lazy, useEffect, useCallback } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch, Redirect, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { LinearProgress } from '@material-ui/core';
+import { LinearProgress, Toolbar } from '@material-ui/core';
 import Main from './containers/Main/Main';
 import Layout from './hoc/Layout/Layout';
 import Login from './containers/Auth/Login';
@@ -15,6 +15,7 @@ const Logout = lazy(() => import('./containers/Auth/Logout/Logout'));
 const Book = lazy(() => import('./containers/Books/Book/Book'));
 
 const App = () => {
+	const location = useLocation();
 	const dispatch = useDispatch();
 	const isAuthenticated = useSelector((state) => state.auth.idToken !== null);
 	const onTryAutoSignup = useCallback(
@@ -26,6 +27,7 @@ const App = () => {
 		onTryAutoSignup();
 	}, [onTryAutoSignup]);
 
+	// Check existence of Horizontal Scrollbar based on difference of html width and window width.
 	// useEffect(() => {
 	// 	let hasScrollbar = window.innerWidth > document.documentElement.clientWidth;
 	// 	console.log('Window InnerWith : ', window.innerWidth);
@@ -65,9 +67,14 @@ const App = () => {
 		);
 	}
 
+	const toolbar = location.pathname !== '/' ? <Toolbar /> : null;
+
 	return (
 		<div>
-			<Layout>{routes}</Layout>
+			<Layout>
+				{toolbar}
+				{routes}
+			</Layout>
 		</div>
 	);
 };

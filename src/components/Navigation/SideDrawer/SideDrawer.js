@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import {
 	Hidden,
 	Drawer,
-	Toolbar,
 	List,
 	ListItem,
 	ListItemIcon,
@@ -13,7 +12,14 @@ import {
 	makeStyles,
 	useTheme,
 } from '@material-ui/core';
-import { MenuBook, Publish } from '@material-ui/icons';
+import {
+	Book,
+	AccountCircle,
+	Publish,
+	ExitToApp,
+	AddCircleOutline,
+	Home,
+} from '@material-ui/icons';
 
 const SideDrawer = (props) => {
 	const theme = useTheme();
@@ -38,30 +44,47 @@ const SideDrawer = (props) => {
 
 	const isAuthenticated = useSelector((state) => state.auth.idToken !== null);
 	const classes = useStyles();
-	let links = ['Books'];
+	let links = ['/', 'Books', 'Login', 'Signup'];
 	if (isAuthenticated) {
-		links = ['Books', 'Publish'];
+		links = ['/', 'Books', 'Publish', 'Logout'];
 	}
+
+	const getNavIcon = (text) => {
+		switch (text) {
+			case '/':
+				return <Home className={classes.icons} />;
+			case 'Books':
+				return <Book className={classes.icons} />;
+			case 'Login':
+				return <AccountCircle className={classes.icons} />;
+			case 'Signup':
+				return <AddCircleOutline className={classes.icons} />;
+			case 'Publish':
+				return <Publish className={classes.icons} />;
+			case 'Logout':
+				return <ExitToApp className={classes.icons} />;
+			default:
+				break;
+		}
+	};
+
 	const drawer = (
 		<div>
-			<Toolbar />
-			<Divider />
 			<List>
 				{links.map((text, index) => (
 					<ListItem
 						button
 						key={text}
 						component={NavLink}
-						to={`/${text.toLowerCase()}`}
+						to={
+							text !== '/' ? `/${text.toLowerCase()}` : `${text.toLowerCase()}`
+						}
+						onClick={props.toggleDrawer}
 					>
-						<ListItemIcon>
-							{index % 2 === 0 ? (
-								<MenuBook className={classes.icons} />
-							) : (
-								<Publish className={classes.icons} />
-							)}
-						</ListItemIcon>
-						<ListItemText primary={text} />
+						<ListItemIcon>{getNavIcon(text)}</ListItemIcon>
+						<ListItemText
+							primary={text !== '/' ? text.toUpperCase() : 'HOME'}
+						/>
 					</ListItem>
 				))}
 			</List>
@@ -72,15 +95,6 @@ const SideDrawer = (props) => {
 	const container = window !== undefined ? window.document.body : undefined;
 	return (
 		<div>
-			{/* <Hidden mdDown implementation='css'>
-				<Drawer
-					variant='permanent'
-					className={classes.drawer}
-					classes={{ paper: classes.paper }}
-				>
-					{drawer}
-				</Drawer>
-			</Hidden> */}
 			<Hidden xsUp implementation='css'>
 				<Drawer
 					container={container}
@@ -90,7 +104,6 @@ const SideDrawer = (props) => {
 					classes={{ paper: classes.paper }}
 					open={props.openDrawer}
 					onClose={props.toggleDrawer}
-					// ModalProps={{ keepMounted: true }}
 				>
 					{drawer}
 				</Drawer>
