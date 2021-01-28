@@ -76,7 +76,7 @@ const Login = () => {
 						<LockOutlinedIcon />
 					</Avatar>
 					<Typography component='h1' variant='h5'>
-						Login
+						Ingresar
 					</Typography>
 					<form
 						className={classes.form}
@@ -96,7 +96,7 @@ const Login = () => {
 							})}
 							fullWidth
 							id='email'
-							label='Email Address'
+							label='Dirección de Email'
 							name='email'
 							autoComplete='email'
 							autoFocus
@@ -119,7 +119,7 @@ const Login = () => {
 							})}
 							fullWidth
 							name='password'
-							label='Password'
+							label='Contraseña'
 							type='password'
 							id='password'
 							autoComplete='current-password'
@@ -138,7 +138,7 @@ const Login = () => {
 									defaultValue={false}
 								/>
 							}
-							label='Remember me'
+							label='Recuérdeme'
 						/>
 						<Button
 							type='submit'
@@ -148,7 +148,7 @@ const Login = () => {
 							disabled={loading}
 							className={classes.submit}
 						>
-							Login
+							Ingresar
 							{loading && (
 								<CircularProgress size={24} className={classes.progress} />
 							)}
@@ -156,12 +156,12 @@ const Login = () => {
 						<Grid container>
 							<Grid item xs>
 								<Link href='#' variant='body2'>
-									Forgot password?
+									¿Olvido su contraseña?
 								</Link>
 							</Grid>
 							<Grid item>
 								<Link variant='body2' component={NavLink} to='/signup'>
-									{"Don't have an account? Sign Up"}
+									{'¿No tiene una cuenta? Regístrese'}
 								</Link>
 							</Grid>
 						</Grid>

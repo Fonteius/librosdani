@@ -65,18 +65,24 @@ const Main = (props) => {
 					<Typography>CELULAR : +54-223-3033286</Typography>
 					<Typography>FIJO : +54-223-487-5671</Typography>
 					<Typography>E-MAIL : daniel_mena_olivares@hotmail.com</Typography>
-					<Link href='https://www.facebook.com/profile.php?id=100007836255790'>
+					<Link
+						href='https://www.facebook.com/profile.php?id=100007836255790'
+						target='_blank'
+					>
 						<Facebook fontSize='large' />
 					</Link>
-					<Link href='https://wa.me/5402233033286'>
+					<Link href='https://wa.me/5402233033286' target='_blank'>
 						<WhatsApp fontSize='large' />
 					</Link>
-					<Link href='mailto:daniel_mena_olivares@hotmail.com'>
+					<Link href='mailto:daniel_mena_olivares@hotmail.com' target='_blank'>
 						<MailOutline fontSize='large' />
 					</Link>
 					<Typography variant='body2' color='textSecondary'>
-						{'Copyright © '}
-						<Link color='inherit' href='https://libros-dani.web.app/'>
+						<Link
+							color='inherit'
+							href='https://libros-dani.web.app/'
+							target='_blank'
+						>
 							Libros Dani
 						</Link>{' '}
 						{new Date().getFullYear()}

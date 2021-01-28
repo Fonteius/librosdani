@@ -111,7 +111,7 @@ const MainMenu = (props) => {
 				to='/books'
 				className={`${classes.buttons} ${classes.navLinks}`}
 			>
-				BOOKS
+				LIBROS
 			</Typography>
 		</Fragment>
 	);
@@ -125,7 +125,7 @@ const MainMenu = (props) => {
 				color='primary'
 				className={classes.buttons}
 			>
-				Login
+				Ingresar
 			</Button>
 			<Button
 				component={NavLink}
@@ -134,7 +134,7 @@ const MainMenu = (props) => {
 				color='primary'
 				className={classes.buttons}
 			>
-				Sign Up
+				Registrarse
 			</Button>
 		</Fragment>
 	);
@@ -146,14 +146,14 @@ const MainMenu = (props) => {
 					to='/books'
 					className={`${classes.buttons} ${classes.navLinks}`}
 				>
-					BOOKS
+					LIBROS
 				</Typography>
 				<Typography
 					component={NavLink}
 					to='/publish'
 					className={`${classes.buttons} ${classes.navLinks}`}
 				>
-					PUBLISH
+					PUBLICAR
 				</Typography>
 			</Fragment>
 		);
@@ -207,7 +207,7 @@ const MainMenu = (props) => {
 												menuCloseHandler(e);
 											}}
 										>
-											Profile
+											Perfil
 										</MenuItem>
 										<MenuItem
 											onClick={(e) => {
@@ -215,7 +215,7 @@ const MainMenu = (props) => {
 												menuCloseHandler(e);
 											}}
 										>
-											Logout
+											Cerrar sesión
 										</MenuItem>
 									</MenuList>
 								</ClickAwayListener>

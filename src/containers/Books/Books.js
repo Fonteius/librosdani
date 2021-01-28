@@ -244,36 +244,6 @@ const Books = () => {
 	};
 
 	let filterBar = (
-		// <FormControl component='fieldset'>
-		// 	<FormLabel component='legend'>FILTRAR POR:</FormLabel>
-		// 	<FormGroup aria-label='position' row>
-		// 		<FormControlLabel
-		// 			value='end'
-		// 			control={<Checkbox color='primary' />}
-		// 			label='Precio'
-		// 			labelPlacement='end'
-		// 		/>
-		// 	</FormGroup>
-		// 	<FormLabel component='legend'>ORDENAR POR:</FormLabel>
-		// 	<Select
-		// 		id='order'
-		// 		label='Order'
-		// 		labelId='order'
-		// 		name='order'
-		// 		value={order}
-		// 		onChange={(e) => orderSelectionHandler(e)}
-		// 	>
-		// 		<MenuItem value={0}>Titulo : A-Z</MenuItem>
-		// 		<MenuItem value={1}>Titulo : Z-A</MenuItem>
-		// 		<MenuItem value={2}>Precio : Menor a Mayor</MenuItem>
-		// 		<MenuItem value={3}>Precio : Mayor a Menor</MenuItem>
-		// 		<MenuItem value={4}>Año : Menor a Mayor</MenuItem>
-		// 		<MenuItem value={5}>Año : Mayor a Menor</MenuItem>
-		// 	</Select>
-		// 	<FormLabel component='legend'>
-		// 		RESULTADOS: {orderedBooks ? orderedBooks.length : null}
-		// 	</FormLabel>
-		// </FormControl>
 		<div>
 			<CssBaseline />
 			<FormLabel component='legend' className={classes.filterLabel}>
@@ -286,6 +256,7 @@ const Books = () => {
 				name='order'
 				value={order}
 				onChange={(e) => orderSelectionHandler(e)}
+				style={{ marginBottom: '5px' }}
 			>
 				<MenuItem value={0}>Titulo : A-Z</MenuItem>
 				<MenuItem value={1}>Titulo : Z-A</MenuItem>
@@ -308,6 +279,10 @@ const Books = () => {
 				style={{ width: 125 }}
 			/>
 			<FormLabel component='legend' className={classes.filterLabel}>
+				LOCALIDAD:
+			</FormLabel>
+			<Typography>Mar del Plata</Typography>
+			<FormLabel component='legend' className={classes.filterLabel}>
 				RESULTADOS: {orderedBooks ? orderedBooks.length : null}
 			</FormLabel>
 		</div>
@@ -321,7 +296,7 @@ const Books = () => {
 		>
 			<TextField
 				id='search'
-				label='Search'
+				label='Buscar'
 				name='search'
 				variant='outlined'
 				autoFocus
@@ -343,7 +318,7 @@ const Books = () => {
 				size='small'
 				className={classes.submitSearch}
 			>
-				Search
+				Buscar
 			</Button>
 			<Hidden smUp>
 				<IconButton
@@ -406,7 +381,7 @@ const Books = () => {
 								color='primary'
 								onClick={() => detailButtonHandler(book.id, book.title)}
 							>
-								Details
+								Detalles
 							</Button>
 						</CardActions>
 					</Card>

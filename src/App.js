@@ -43,7 +43,7 @@ const App = () => {
 			<Switch>
 				<Route path='/login' component={Login} />
 				<Route path='/signup' component={Signup} />
-				<Route path='/book/:bookId/:title' component={Book} />
+				<Route path='/book/:bookId/:title?' component={Book} />
 				<Route path='/books' component={Books} />
 				<Route path='/' exact component={Main} />
 				<Redirect to='/' />
@@ -58,7 +58,7 @@ const App = () => {
 					<Route path='/logout' component={Logout} />
 					<Route path='/user' component={User} />
 					<Route path='/publish' component={Publish} />
-					<Route path='/book/:bookId/:title' component={Book} />
+					<Route path='/book/:bookId/:title?' component={Book} />
 					<Route path='/books' component={Books} />
 					<Route path='/' exact component={Main} />
 					<Redirect to='/' />

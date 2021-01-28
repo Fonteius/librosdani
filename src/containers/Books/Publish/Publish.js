@@ -90,7 +90,7 @@ const Publish = () => {
 	const [images, setImages] = useState(null);
 	const idToken = useSelector((state) => state.auth.idToken);
 	const loading = useSelector((state) => state.books.loading);
-	const { register, handleSubmit, errors } = useForm();
+	const { register, handleSubmit, errors, reset } = useForm();
 
 	const dispatch = useDispatch();
 	const onPublishBook = (idToken, book) =>
@@ -113,6 +113,10 @@ const Publish = () => {
 			pictures: [...images],
 		};
 		onPublishBook(idToken, book);
+		if (!data.remember) {
+			reset({});
+			setImages(null);
+		}
 	};
 
 	const addImageHandler = (ref) => {
@@ -157,14 +161,14 @@ const Publish = () => {
 				<GridListTile key='1'>
 					<Paper className={classes.imageSize} />
 					<GridListTileBar
-						title='Add Image'
+						title='Agregar Fotos'
 						classes={{
 							root: classes.titleBar,
 							title: classes.title,
 						}}
 						actionIcon={
 							<IconButton
-								aria-label='Add Images'
+								aria-label='Agregar Fotos'
 								onClick={() => addImageHandler(imageInputRef)}
 							>
 								<input
@@ -187,14 +191,14 @@ const Publish = () => {
 							<GridListTile key={index}>
 								<img src={URL.createObjectURL(item)} alt='' />
 								<GridListTileBar
-									title='Remove Image'
+									title='Remover Foto'
 									classes={{
 										root: classes.titleBar,
 										title: classes.title,
 									}}
 									actionIcon={
 										<IconButton
-											aria-label='Remove Image'
+											aria-label='Remover Foto'
 											onClick={() => removeImageHandler(item)}
 										>
 											<CancelIcon className={classes.title}></CancelIcon>
@@ -217,7 +221,7 @@ const Publish = () => {
 						<PublishOutlinedIcon />
 					</Avatar>
 					<Typography component='h1' variant='h5'>
-						Publish
+						Publicar
 					</Typography>
 					<form
 						className={classes.form}
@@ -235,7 +239,7 @@ const Publish = () => {
 							})}
 							fullWidth
 							id='title'
-							label='Title'
+							label='Titulo'
 							name='title'
 							autoComplete='title'
 							autoFocus
@@ -255,7 +259,7 @@ const Publish = () => {
 							})}
 							fullWidth
 							name='author'
-							label='Author'
+							label='Autor'
 							type='author'
 							id='author'
 							autoComplete='author'
@@ -279,7 +283,7 @@ const Publish = () => {
 							})}
 							fullWidth
 							id='price'
-							label='Price'
+							label='Precio'
 							name='price'
 							autoComplete='price'
 						/>
@@ -322,7 +326,7 @@ const Publish = () => {
 							})}
 							fullWidth
 							id='year'
-							label='Year'
+							label='Año'
 							name='year'
 							autoComplete='year'
 						/>
@@ -340,7 +344,7 @@ const Publish = () => {
 									defaultValue={false}
 								/>
 							}
-							label='Remember Selections'
+							label='Recordar Datos'
 						/>
 						<Button
 							type='submit'
@@ -350,7 +354,7 @@ const Publish = () => {
 							disabled={loading}
 							className={classes.submit}
 						>
-							Publish
+							Publicar
 							{loading && (
 								<CircularProgress size={24} className={classes.progress} />
 							)}

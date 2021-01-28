@@ -74,7 +74,7 @@ const Signup = () => {
 						<LockOutlinedIcon />
 					</Avatar>
 					<Typography component='h1' variant='h5'>
-						Sign up
+						Registrarse
 					</Typography>
 					<form
 						className={classes.form}
@@ -94,7 +94,7 @@ const Signup = () => {
 							})}
 							fullWidth
 							id='email'
-							label='Email Address'
+							label='Dirección de Email'
 							name='email'
 							autoComplete='email'
 							autoFocus
@@ -117,7 +117,7 @@ const Signup = () => {
 							})}
 							fullWidth
 							name='password'
-							label='Password'
+							label='Contraseña'
 							type='password'
 							id='password'
 							autoComplete='current-password'
@@ -135,7 +135,7 @@ const Signup = () => {
 							disabled={loading}
 							className={classes.submit}
 						>
-							Sign Up
+							Registrarse
 							{loading && (
 								<CircularProgress size={24} className={classes.progress} />
 							)}
@@ -143,7 +143,7 @@ const Signup = () => {
 						<Grid container justify='flex-end'>
 							<Grid item>
 								<Link variant='body2' component={NavLink} to='/login'>
-									Already have an account? Sign in
+									¿Ya tiene una cuenta? Ingrese
 								</Link>
 							</Grid>
 						</Grid>

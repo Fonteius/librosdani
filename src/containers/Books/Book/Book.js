@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import {
 	makeStyles,
-	Card,
 	CardActionArea,
 	CardContent,
 	CardMedia,
@@ -13,6 +12,7 @@ import {
 	CssBaseline,
 	Container,
 } from '@material-ui/core';
+import { Favorite, FavoriteBorder } from '@material-ui/icons';
 import * as actions from '../../../store/actions/index';
 
 const useStyles = makeStyles((theme) => ({
@@ -28,8 +28,8 @@ const useStyles = makeStyles((theme) => ({
 		flexGrow: 1,
 	},
 	media: {
-		height: '70vh',
-		width: '70vh',
+		height: '55vh',
+		width: '80vh',
 		[theme.breakpoints.down('md')]: {
 			height: '35vh',
 			width: '35vh',
@@ -63,6 +63,14 @@ const useStyles = makeStyles((theme) => ({
 	mediaButton: {
 		padding: 0,
 		margin: 0,
+	},
+	pictures: {
+		display: 'inline-flex',
+		padding: '5px 0px',
+	},
+	submit: {
+		margin: theme.spacing(1),
+		width: '40vh',
 	},
 }));
 
@@ -107,16 +115,6 @@ const Book = ({ match }) => {
 	} else if (book !== null) {
 		body = (
 			<Grid container direction={'row'} spacing={0} justify={'space-evenly'}>
-				<Grid item xs={1}>
-					{book.pictures.map((picture) => (
-						<CardActionArea
-							key={picture.name}
-							onClick={() => pictureChangeHandler(picture.image)}
-						>
-							<CardMedia className={classes.thumb} image={picture.thumb} />
-						</CardActionArea>
-					))}
-				</Grid>
 				<Grid item xs={7}>
 					<CardActionArea>
 						<Button
@@ -134,29 +132,59 @@ const Book = ({ match }) => {
 							/>
 						</Button>
 					</CardActionArea>
+					<Grid item xs={12} className={classes.pictures}>
+						{book.pictures.map((picture) => (
+							<CardActionArea
+								key={picture.name}
+								onClick={() => pictureChangeHandler(picture.image)}
+							>
+								<CardMedia className={classes.thumb} image={picture.thumb} />
+							</CardActionArea>
+						))}
+					</Grid>
 					<CardContent>
 						<Typography gutterBottom variant='h6' component='h2'>
-							Title : {book.title}
+							Titulo : {book.title}
 						</Typography>
 						<Typography gutterBottom variant='h6' component='h2'>
-							Author : {book.author}
+							Autor : {book.author}
 						</Typography>
 						<Typography gutterBottom variant='h6' component='h2'>
-							Editorial : {book.editorial} | Year : {book.year}
+							Editorial : {book.editorial}
+						</Typography>
+						<Typography gutterBottom variant='h6' component='h2'>
+							Año : {book.year}
 						</Typography>
 					</CardContent>
 				</Grid>
 				<Grid item xs={4}>
-					<CardContent>
-						<Typography gutterBottom variant='h6' component='h2'>
-							{book.title} - {book.author}
-						</Typography>
-					</CardContent>
-					<CardContent>
-						<Typography gutterBottom variant='h6' component='h2'>
-							${book.price}
-						</Typography>
-					</CardContent>
+					<Typography gutterBottom variant='h6' component='h2'>
+						{book.title} - {book.author}
+					</Typography>
+					<Typography gutterBottom variant='h6' component='h2'>
+						${book.price}
+					</Typography>
+					<Typography gutterBottom variant='h6' component='h2'>
+						Mar del Plata
+					</Typography>
+					<Button
+						type='submit'
+						fullWidth
+						variant='contained'
+						color='primary'
+						className={classes.submit}
+					>
+						Contacto
+					</Button>
+					<Button
+						type='submit'
+						fullWidth
+						variant='contained'
+						color='primary'
+						className={classes.submit}
+					>
+						Añadir a Favoritos
+					</Button>
 				</Grid>
 			</Grid>
 		);
@@ -165,9 +193,7 @@ const Book = ({ match }) => {
 	return (
 		<div className={classes.root}>
 			<CssBaseline />
-			<Container maxWidth={false}>
-				<Card className={classes.card}>{body}</Card>
-			</Container>
+			<Container maxWidth={false}>{body}</Container>
 		</div>
 	);
 };
