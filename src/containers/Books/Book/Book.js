@@ -12,7 +12,6 @@ import {
 	CssBaseline,
 	Container,
 } from '@material-ui/core';
-import { Favorite, FavoriteBorder } from '@material-ui/icons';
 import * as actions from '../../../store/actions/index';
 
 const useStyles = makeStyles((theme) => ({
@@ -193,7 +192,7 @@ const Book = ({ match }) => {
 	return (
 		<div className={classes.root}>
 			<CssBaseline />
-			<Container maxWidth={false}>{body}</Container>
+			{body ? <Container maxWidth={false}>{body}</Container> : null}
 		</div>
 	);
 };

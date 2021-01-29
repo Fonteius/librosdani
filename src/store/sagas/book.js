@@ -1,6 +1,7 @@
 import { put } from 'redux-saga/effects';
 import axios from 'axios';
 import database from '../../axios-database';
+import Resizer from 'react-image-file-resizer';
 import * as actions from '../actions/index';
 
 export function* publishBookSaga(action) {
@@ -37,7 +38,12 @@ export function* publishPicturesSaga(files) {
 	};
 	for (let i = 0; i < files.length; i++) {
 		formData = yield new FormData();
-		const base64 = yield toBase64(files[i]);
+		let base64 = null;
+		if (files[i].size > 200000) {
+			base64 = yield resizeImage(files[i]);
+		} else {
+			base64 = yield toBase64(files[i]);
+		}
 		yield formData.append('file', base64);
 		yield formData.append('name', files[i].name);
 		response = yield axios.post(url, formData, config);
@@ -56,6 +62,22 @@ export function* publishPicturesSaga(files) {
 	}
 	return picturesUrl;
 }
+
+const resizeImage = (image) =>
+	new Promise((resolve) => {
+		Resizer.imageFileResizer(
+			image,
+			1920,
+			1080,
+			'JPEG',
+			60,
+			0,
+			(uri) => {
+				resolve(uri);
+			},
+			'base64'
+		);
+	});
 
 const toBase64 = (file) =>
 	new Promise((resolve, reject) => {

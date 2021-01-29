@@ -21,10 +21,12 @@ import {
 	makeStyles,
 	CircularProgress,
 } from '@material-ui/core';
+import {
+	PublishOutlined,
+	InsertPhotoOutlined,
+	Cancel,
+} from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
-import PublishOutlinedIcon from '@material-ui/icons/PublishOutlined';
-import InsertPhotoOutlinedIcon from '@material-ui/icons/InsertPhotoOutlined';
-import CancelIcon from '@material-ui/icons/Cancel';
 import * as actions from '../../../store/actions/index';
 
 const useStyles = makeStyles((theme) => ({
@@ -88,6 +90,7 @@ const Publish = () => {
 	const classes = useStyles();
 	let imageInputRef = useRef(null);
 	const [images, setImages] = useState(null);
+	const [imageAlert, setImageAlert] = useState(false);
 	const idToken = useSelector((state) => state.auth.idToken);
 	const loading = useSelector((state) => state.books.loading);
 	const { register, handleSubmit, errors, reset } = useForm();
@@ -104,18 +107,24 @@ const Publish = () => {
 	}, [onFetchBooks]);
 
 	const publishBook = (data) => {
-		const book = {
-			title: data.title,
-			author: data.author,
-			price: data.price,
-			editorial: data.editorial,
-			year: data.year,
-			pictures: [...images],
-		};
-		onPublishBook(idToken, book);
-		if (!data.remember) {
-			reset({});
-			setImages(null);
+		if (!images) {
+			setImageAlert(true);
+			return;
+		} else {
+			setImageAlert(false);
+			const book = {
+				title: data.title,
+				author: data.author,
+				price: data.price,
+				editorial: data.editorial,
+				year: data.year,
+				pictures: [...images],
+			};
+			onPublishBook(idToken, book);
+			if (!data.remember) {
+				reset({});
+				setImages(null);
+			}
 		}
 	};
 
@@ -125,15 +134,18 @@ const Publish = () => {
 
 	const setImageHandler = (e) => {
 		let files = [];
+		setImageAlert(true);
 		if (images === null) {
 			if (e.target.files.length !== 1) {
 				for (let index = 0; index < e.target.files.length; index++) {
 					const file = e.target.files[index];
 					files.push(file);
 				}
+				setImageAlert(false);
 				setImages(files);
 				files = [];
 			} else {
+				setImageAlert(false);
 				setImages([e.target.files[0]]);
 			}
 		} else {
@@ -142,9 +154,11 @@ const Publish = () => {
 					const file = e.target.files[index];
 					files.push(file);
 				}
+				setImageAlert(false);
 				setImages((state) => [...state, ...files]);
 				files = [];
 			} else {
+				setImageAlert(false);
 				setImages((state) => [...state, e.target.files[0]]);
 			}
 		}
@@ -152,7 +166,12 @@ const Publish = () => {
 
 	const removeImageHandler = (item) => {
 		const newImages = images.filter((img) => img !== item);
-		setImages(newImages);
+		if (newImages.length === 0) {
+			setImages(null);
+			setImageAlert(true);
+		} else {
+			setImages(newImages);
+		}
 	};
 
 	const imageList = (
@@ -181,7 +200,7 @@ const Publish = () => {
 									className={classes.imageSize}
 									onChange={setImageHandler}
 								/>
-								<InsertPhotoOutlinedIcon className={classes.title} />
+								<InsertPhotoOutlined className={classes.title} />
 							</IconButton>
 						}
 					/>
@@ -201,7 +220,7 @@ const Publish = () => {
 											aria-label='Remover Foto'
 											onClick={() => removeImageHandler(item)}
 										>
-											<CancelIcon className={classes.title}></CancelIcon>
+											<Cancel className={classes.title}></Cancel>
 										</IconButton>
 									}
 								/>
@@ -218,7 +237,7 @@ const Publish = () => {
 				<CssBaseline />
 				<div className={classes.paper}>
 					<Avatar className={classes.avatar}>
-						<PublishOutlinedIcon />
+						<PublishOutlined />
 					</Avatar>
 					<Typography component='h1' variant='h5'>
 						Publicar
@@ -229,6 +248,11 @@ const Publish = () => {
 						onSubmit={handleSubmit((data) => publishBook(data))}
 					>
 						{imageList}
+						{imageAlert ? (
+							<Alert variant='outlined' severity='error'>
+								Debe ingresar al menos una imagen.
+							</Alert>
+						) : null}
 						<TextField
 							variant='outlined'
 							margin='normal'
