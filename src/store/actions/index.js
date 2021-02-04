@@ -44,3 +44,10 @@ export {
 	removeBookSuccess,
 	removeBookFail,
 } from './book';
+
+export {
+	fetchTags,
+	fetchTagsStart,
+	fetchTagsSuccess,
+	fetchTagsFail,
+} from './tag';

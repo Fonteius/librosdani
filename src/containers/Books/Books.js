@@ -127,6 +127,10 @@ const Books = () => {
 		dispatch,
 	]);
 
+	const onFetchTags = useCallback(() => dispatch(actions.fetchTags()), [
+		dispatch,
+	]);
+
 	const filterBooks = useCallback(() => {
 		const priceSlideFilter = allBooks.books.filter((item) => {
 			if (

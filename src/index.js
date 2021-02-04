@@ -7,19 +7,20 @@ import createSagaMiddleware from 'redux-saga';
 import {
 	unstable_createMuiStrictModeTheme as createMuiTheme,
 	ThemeProvider,
-	colors,
 } from '@material-ui/core';
 import './index.css';
 import App from './App';
 import authReducer from './store/reducers/auth';
 import bookReducer from './store/reducers/book';
-import { watchAuth, watchBook } from './store/sagas/index';
+import tagReducer from './store/reducers/tag';
+import { watchAuth, watchBook, watchTag } from './store/sagas/index';
 import * as serviceWorker from './serviceWorker';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const rootReducer = combineReducers({
 	auth: authReducer,
 	books: bookReducer,
+	tags: tagReducer,
 });
 const sagaMiddleware = createSagaMiddleware();
 
@@ -30,6 +31,7 @@ const store = createStore(
 
 sagaMiddleware.run(watchAuth);
 sagaMiddleware.run(watchBook);
+sagaMiddleware.run(watchTag);
 
 //TODO: Generate theme with CSS variables for all components that depend on elements sizes like Drawer or AppBar.
 const theme = createMuiTheme({

@@ -17,6 +17,8 @@ import {
 	fetchBookSaga,
 } from './book';
 
+import { fetchTagsSaga } from './tag';
+
 export function* watchAuth() {
 	yield all([
 		takeEvery(actionTypes.LOGIN, loginSaga),
@@ -38,4 +40,8 @@ export function* watchBook() {
 	yield takeEvery(actionTypes.REMOVE_BOOK, removeBookSaga);
 	yield takeEvery(actionTypes.FETCH_BOOKS, fetchBooksSaga);
 	yield takeEvery(actionTypes.FETCH_BOOK, fetchBookSaga);
+}
+
+export function* watchTag() {
+	yield takeEvery(actionTypes.FETCH_TAGS, fetchTagsSaga);
 }

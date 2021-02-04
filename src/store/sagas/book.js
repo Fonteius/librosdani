@@ -8,9 +8,15 @@ export function* publishBookSaga(action) {
 	yield put(actions.addBookStart());
 	try {
 		const images = yield publishPicturesSaga(action.bookData.pictures);
+		const date = new Date().getTime();
 		const book = yield {
 			...action.bookData,
 			pictures: [...images],
+			creationDate: date,
+			updateDate: date,
+			endDate: null,
+			tags: [],
+			status: 'active',
 		};
 		const authParam = action.idToken;
 		const response = yield database.post('/books.json', book, {
