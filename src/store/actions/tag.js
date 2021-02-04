@@ -13,7 +13,6 @@ export const fetchTagsStart = () => {
 };
 
 export const fetchTagsSuccess = (tags) => {
-	console.log(tags);
 	return {
 		type: actionTypes.FETCH_TAGS_SUCCESS,
 		tags: tags,

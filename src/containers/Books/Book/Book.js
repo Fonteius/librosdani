@@ -67,9 +67,22 @@ const useStyles = makeStyles((theme) => ({
 		display: 'inline-flex',
 		padding: '5px 0px',
 	},
+	image: {
+		width: 'auto',
+		height: '55vh',
+		[theme.breakpoints.down('md')]: {
+			height: '35vh',
+		},
+		[theme.breakpoints.down('sm')]: {
+			height: '20vh',
+		},
+		[theme.breakpoints.down('xs')]: {
+			height: '20vh',
+		},
+	},
 	submit: {
 		margin: theme.spacing(1),
-		width: '40vh',
+		// width: '40vh',
 	},
 }));
 
@@ -77,6 +90,7 @@ const Book = ({ match }) => {
 	const dispatch = useDispatch();
 	const [book, setBook] = useState(null);
 	const [mainPicture, setMainPicture] = useState();
+	const [tags, setTags] = useState('');
 	const classes = useStyles();
 	// const history = useHistory();
 	const bookData = useSelector((state) => state.books.book);
@@ -99,6 +113,14 @@ const Book = ({ match }) => {
 	}, [bookData]);
 
 	useEffect(() => {
+		if (book) {
+			let tags = [];
+			book.tags.forEach((tag) => tags.push(tag.title));
+			setTags(tags.join(' - '));
+		}
+	}, [book, setTags]);
+
+	useEffect(() => {
 		if (book !== null) {
 			setMainPicture(book.pictures[0].image);
 		}
@@ -115,22 +137,24 @@ const Book = ({ match }) => {
 		body = (
 			<Grid container direction={'row'} spacing={0} justify={'space-evenly'}>
 				<Grid item xs={7}>
-					<CardActionArea>
-						<Button
-							className={classes.mediaButton}
-							size='small'
-							color='primary'
-							href={mainPicture}
-							target='_blank'
-							component='a'
-						>
-							<CardMedia
-								className={classes.media}
-								image={mainPicture}
-								component='div'
-							/>
-						</Button>
-					</CardActionArea>
+					<Grid item xs={12}>
+						<CardActionArea>
+							<Button
+								className={classes.mediaButton}
+								size='small'
+								color='primary'
+								href={mainPicture}
+								target='_blank'
+								component='a'
+							>
+								<CardMedia
+									classes={{ img: classes.image }}
+									image={mainPicture}
+									component='img'
+								/>
+							</Button>
+						</CardActionArea>
+					</Grid>
 					<Grid item xs={12} className={classes.pictures}>
 						{book.pictures.map((picture) => (
 							<CardActionArea
@@ -154,6 +178,14 @@ const Book = ({ match }) => {
 						<Typography gutterBottom variant='h6' component='h2'>
 							Año : {book.year}
 						</Typography>
+						<Typography
+							gutterBottom
+							variant='h6'
+							component='h2'
+							style={{ textTransform: 'capitalize' }}
+						>
+							Género : {tags}
+						</Typography>
 					</CardContent>
 				</Grid>
 				<Grid item xs={4}>
@@ -166,24 +198,28 @@ const Book = ({ match }) => {
 					<Typography gutterBottom variant='h6' component='h2'>
 						Mar del Plata
 					</Typography>
-					<Button
-						type='submit'
-						fullWidth
-						variant='contained'
-						color='primary'
-						className={classes.submit}
-					>
-						Contacto
-					</Button>
-					<Button
-						type='submit'
-						fullWidth
-						variant='contained'
-						color='primary'
-						className={classes.submit}
-					>
-						Añadir a Favoritos
-					</Button>
+					<Grid item xs={12}>
+						<Button
+							type='submit'
+							fullWidth
+							variant='contained'
+							color='primary'
+							className={classes.submit}
+						>
+							Contacto
+						</Button>
+					</Grid>
+					<Grid item xs={12}>
+						<Button
+							type='submit'
+							fullWidth
+							variant='contained'
+							color='primary'
+							className={classes.submit}
+						>
+							Añadir a Favoritos
+						</Button>
+					</Grid>
 				</Grid>
 			</Grid>
 		);

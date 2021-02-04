@@ -1,17 +1,15 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, NavLink } from 'react-router-dom';
+// import { Redirect, NavLink } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import {
 	Avatar,
 	Paper,
 	Button,
-	CardMedia,
 	CssBaseline,
 	TextField,
 	FormControlLabel,
 	Checkbox,
-	Link,
 	GridList,
 	GridListTile,
 	GridListTileBar,
@@ -26,7 +24,7 @@ import {
 	InsertPhotoOutlined,
 	Cancel,
 } from '@material-ui/icons';
-import { Alert } from '@material-ui/lab';
+import { Alert, Autocomplete } from '@material-ui/lab';
 import * as actions from '../../../store/actions/index';
 
 const useStyles = makeStyles((theme) => ({
@@ -39,11 +37,6 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: theme.palette.background.paper,
 	},
 	imageSize: {
-		// minHeight: 'auto',
-		// minWidth: '20vh',
-		// maxWidth: 'auto',
-		// maxHeight: 180,
-		// maxWidth: 180,
 		minWidth: '180px',
 		maxWidth: '180px',
 	},
@@ -72,10 +65,13 @@ const useStyles = makeStyles((theme) => ({
 	},
 	form: {
 		width: '100%', // Fix IE 11 issue.
-		marginTop: theme.spacing(1),
+		marginTop: theme.spacing(0),
+	},
+	tags: {
+		margin: theme.spacing(2, 0, 0),
 	},
 	submit: {
-		margin: theme.spacing(3, 0, 2),
+		margin: theme.spacing(0, 0, 2),
 	},
 	progress: {
 		position: 'absolute',
@@ -91,8 +87,12 @@ const Publish = () => {
 	let imageInputRef = useRef(null);
 	const [images, setImages] = useState(null);
 	const [imageAlert, setImageAlert] = useState(false);
+	const [selectedTags, setSelectedTags] = useState([]);
+	const [tagsAlert, setTagsAlert] = useState(false);
+	const [touchedSubmit, setTouchedSubmit] = useState(false);
 	const idToken = useSelector((state) => state.auth.idToken);
 	const loading = useSelector((state) => state.books.loading);
+	const tags = useSelector((state) => state.tags.tags);
 	const { register, handleSubmit, errors, reset } = useForm();
 
 	const dispatch = useDispatch();
@@ -101,17 +101,34 @@ const Publish = () => {
 	const onFetchBooks = useCallback(() => dispatch(actions.fetchBooks()), [
 		dispatch,
 	]);
+	const onFetchTags = useCallback(() => dispatch(actions.fetchTags()), [
+		dispatch,
+	]);
 
 	useEffect(() => {
 		onFetchBooks();
-	}, [onFetchBooks]);
+		onFetchTags();
+	}, [onFetchBooks, onFetchTags]);
+
+	useEffect(() => {
+		if (touchedSubmit) {
+			if (selectedTags.length !== 0) {
+				setTagsAlert(false);
+			} else {
+				setTagsAlert(true);
+			}
+		}
+	}, [selectedTags, touchedSubmit]);
 
 	const publishBook = (data) => {
-		if (!images) {
-			setImageAlert(true);
+		setTouchedSubmit(true);
+		if (!images || selectedTags.length === 0) {
+			!images ? setImageAlert(true) : setImageAlert(false);
+			selectedTags.length === 0 ? setTagsAlert(true) : setTagsAlert(false);
 			return;
 		} else {
 			setImageAlert(false);
+			setTagsAlert(false);
 			const book = {
 				title: data.title,
 				author: data.author,
@@ -119,11 +136,14 @@ const Publish = () => {
 				editorial: data.editorial,
 				year: data.year,
 				pictures: [...images],
+				tags: [...selectedTags],
 			};
 			onPublishBook(idToken, book);
 			if (!data.remember) {
 				reset({});
+				setTouchedSubmit(false);
 				setImages(null);
+				setSelectedTags([]);
 			}
 		}
 	};
@@ -172,6 +192,16 @@ const Publish = () => {
 		} else {
 			setImages(newImages);
 		}
+	};
+
+	const tagsInputHandler = (value) => {
+		setSelectedTags(value);
+	};
+
+	const capitalizeText = (text) => {
+		return text.replace(/\w\S*/g, (w) =>
+			w.replace(/^\w/, (c) => c.toUpperCase())
+		);
 	};
 
 	const imageList = (
@@ -258,8 +288,8 @@ const Publish = () => {
 							margin='normal'
 							required
 							inputRef={register({
-								required: 'Title is Required.',
-								maxLength: { value: 60, message: 'Max 60 Characters.' },
+								required: 'Se requiere Titulo.',
+								maxLength: { value: 60, message: '60 Caracteres como Máximo.' },
 							})}
 							fullWidth
 							id='title'
@@ -278,8 +308,8 @@ const Publish = () => {
 							margin='normal'
 							required
 							inputRef={register({
-								required: 'Author is Required.',
-								maxLength: { value: 60, message: 'Max 60 Characters.' },
+								required: 'Se requiere Autor.',
+								maxLength: { value: 60, message: '60 Caracteres como Máximo.' },
 							})}
 							fullWidth
 							name='author'
@@ -298,11 +328,11 @@ const Publish = () => {
 							margin='normal'
 							required
 							inputRef={register({
-								required: 'Price is Required.',
-								maxLength: { value: 5, message: 'Max 5 Characters.' },
+								required: 'Se requiere Precio.',
+								maxLength: { value: 5, message: '5 Caracteres como Máximo.' },
 								pattern: {
 									value: /^[0-9]*$/,
-									message: 'Can only input Numbers.',
+									message: 'Solo se pueden ingresar Números.',
 								},
 							})}
 							fullWidth
@@ -321,8 +351,8 @@ const Publish = () => {
 							margin='normal'
 							required
 							inputRef={register({
-								required: 'Editorial is Required.',
-								maxLength: { value: 60, message: 'Max 60 Characters.' },
+								required: 'Se requiere Editorial.',
+								maxLength: { value: 60, message: '60 Caracteres como Máximo.' },
 							})}
 							fullWidth
 							name='editorial'
@@ -341,11 +371,11 @@ const Publish = () => {
 							margin='normal'
 							required
 							inputRef={register({
-								required: 'Year is Required.',
-								maxLength: { value: 4, message: 'Max 4 Characters.' },
+								required: 'Se requiere Año.',
+								maxLength: { value: 4, message: '4 Caracteres como Máximo.' },
 								pattern: {
 									value: /^[0-9]*$/,
-									message: 'Can only input Numbers.',
+									message: 'Solo se pueden ingresar Números.',
 								},
 							})}
 							fullWidth
@@ -359,6 +389,31 @@ const Publish = () => {
 								{errors.year.message}
 							</Alert>
 						)}
+						<Autocomplete
+							style={{ textTransform: 'capitalize' }}
+							className={classes.tags}
+							multiple
+							id='tags'
+							value={selectedTags}
+							options={tags}
+							getOptionLabel={(tags) => capitalizeText(tags.title)}
+							filterSelectedOptions
+							renderInput={(params) => (
+								<TextField
+									{...params}
+									variant='outlined'
+									required
+									label='Tags'
+									placeholder='Género'
+								/>
+							)}
+							onChange={(e, newValue) => tagsInputHandler(newValue)}
+						/>
+						{tagsAlert ? (
+							<Alert variant='outlined' severity='error'>
+								Debe ingresar al menos un Género Literario.
+							</Alert>
+						) : null}
 						<FormControlLabel
 							control={
 								<Checkbox

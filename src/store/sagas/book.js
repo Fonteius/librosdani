@@ -15,7 +15,6 @@ export function* publishBookSaga(action) {
 			creationDate: date,
 			updateDate: date,
 			endDate: null,
-			tags: [],
 			status: 'active',
 		};
 		const authParam = action.idToken;

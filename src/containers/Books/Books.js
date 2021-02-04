@@ -14,17 +14,19 @@ import {
 	Container,
 	CssBaseline,
 	FormLabel,
+	FormControl,
 	Hidden,
 	Select,
 	Slider,
 	MenuItem,
 	TextField,
+	InputLabel,
 	LinearProgress,
 	useMediaQuery,
 	useTheme,
 } from '@material-ui/core';
 import { Menu } from '@material-ui/icons';
-import { Pagination, Alert } from '@material-ui/lab';
+import { Pagination, Alert, Autocomplete } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 import * as actions from '../../store/actions/index';
 
@@ -55,10 +57,9 @@ const useStyles = makeStyles((theme) => ({
 		margin: theme.spacing(0),
 		width: '100%',
 	},
-	cardMedia: {
-		paddingTop: '56.25%', // 16:9
-		height: '100%',
-		width: '100%',
+	image: {
+		height: '19vh',
+		width: 'auto',
 	},
 	mediaButton: {
 		padding: 0,
@@ -66,6 +67,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	cardContent: {
 		flexGrow: 1,
+		paddingBottom: theme.spacing(1),
 	},
 	submitSearch: {
 		height: '55px',
@@ -107,7 +109,8 @@ const Books = () => {
 	const [pageLimit, setPageLimit] = useState(6);
 	const [paginationSize, setPaginationSize] = useState('large');
 	const [priceSliderValue, setPriceSliderValue] = useState([0, 100]);
-	const [priceSliderBase] = useState(20);
+	const [priceSliderBase] = useState(30);
+	const [selectedTags, setSelectedTags] = useState([]);
 
 	const priceSliderMarks = [
 		{
@@ -122,6 +125,7 @@ const Books = () => {
 
 	const allBooks = useSelector((state) => state.books);
 	const loading = useSelector((state) => state.books.loading);
+	const tags = useSelector((state) => state.tags.tags);
 
 	const onFetchBooks = useCallback(() => dispatch(actions.fetchBooks()), [
 		dispatch,
@@ -142,12 +146,50 @@ const Books = () => {
 				return false;
 			}
 		});
-		const searchResult = priceSlideFilter.filter(
+
+		let tagsFilter = [];
+		if (selectedTags.length !== 0) {
+			tagsFilter = priceSlideFilter.filter((item) => {
+				if (item.tags) {
+					let tags = [];
+					item.tags.forEach((tag) => tags.push(tag.id));
+					if (
+						selectedTags.filter((selected) => {
+							if (
+								tags.filter((tagId) => {
+									if (tagId === selected.id) {
+										return true;
+									} else {
+										return false;
+									}
+								}).length !== 0
+							) {
+								return true;
+							} else {
+								return false;
+							}
+						}).length !== 0
+					) {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			});
+		}
+
+		const searchResult = (selectedTags.length !== 0
+			? tagsFilter
+			: priceSlideFilter
+		).filter(
 			(item) =>
 				(item.title.toLowerCase() + ' ' + item.author.toLowerCase()).indexOf(
 					search.toString().toLowerCase()
 				) >= 0
 		);
+
 		const totalPages = Math.ceil(searchResult.length / pageLimit);
 
 		let orderedBooks = [];
@@ -199,11 +241,13 @@ const Books = () => {
 		order,
 		priceSliderValue,
 		priceSliderBase,
+		selectedTags,
 	]);
 
 	useEffect(() => {
 		onFetchBooks();
-	}, [onFetchBooks]);
+		onFetchTags();
+	}, [onFetchBooks, onFetchTags]);
 
 	useEffect(() => {
 		setPage(1);
@@ -247,28 +291,40 @@ const Books = () => {
 		return `$${value * priceSliderBase}`;
 	};
 
+	const tagsInputHandler = (value) => {
+		setSelectedTags(value);
+	};
+
+	const capitalizeText = (text) => {
+		return text.replace(/\w\S*/g, (w) =>
+			w.replace(/^\w/, (c) => c.toUpperCase())
+		);
+	};
+
 	let filterBar = (
 		<div>
 			<CssBaseline />
 			<FormLabel component='legend' className={classes.filterLabel}>
 				ORDENAR POR:
 			</FormLabel>
-			<Select
-				id='order'
-				label='Order'
-				labelId='order'
-				name='order'
-				value={order}
-				onChange={(e) => orderSelectionHandler(e)}
-				style={{ marginBottom: '5px' }}
-			>
-				<MenuItem value={0}>Titulo : A-Z</MenuItem>
-				<MenuItem value={1}>Titulo : Z-A</MenuItem>
-				<MenuItem value={2}>Precio : Menor a Mayor</MenuItem>
-				<MenuItem value={3}>Precio : Mayor a Menor</MenuItem>
-				<MenuItem value={4}>Año : Menor a Mayor</MenuItem>
-				<MenuItem value={5}>Año : Mayor a Menor</MenuItem>
-			</Select>
+			<FormControl variant='outlined' fullWidth style={{ margin: '15px 0px' }}>
+				<InputLabel id='order'>Filtro</InputLabel>
+				<Select
+					id='order'
+					label='Order'
+					labelId='order'
+					name='order'
+					value={order}
+					onChange={(e) => orderSelectionHandler(e)}
+				>
+					<MenuItem value={0}>Titulo : A-Z</MenuItem>
+					<MenuItem value={1}>Titulo : Z-A</MenuItem>
+					<MenuItem value={2}>Precio : Menor a Mayor</MenuItem>
+					<MenuItem value={3}>Precio : Mayor a Menor</MenuItem>
+					<MenuItem value={4}>Año : Menor a Mayor</MenuItem>
+					<MenuItem value={5}>Año : Mayor a Menor</MenuItem>
+				</Select>
+			</FormControl>
 			<FormLabel component='legend' className={classes.filterLabel}>
 				PRECIO:
 			</FormLabel>
@@ -280,12 +336,34 @@ const Books = () => {
 				valueLabelFormat={priceSliderLabelHandler}
 				aria-labelledby='price-range-slider'
 				marks={priceSliderMarks}
-				style={{ width: 125 }}
+				style={{ margin: '15px 0' }}
+			/>
+			<FormLabel component='legend' className={classes.filterLabel}>
+				GENERO:
+			</FormLabel>
+			<Autocomplete
+				style={{ textTransform: 'capitalize', margin: '15px 0' }}
+				multiple
+				fullWidth
+				id='tags'
+				value={selectedTags}
+				options={tags}
+				getOptionLabel={(tags) => capitalizeText(tags.title)}
+				filterSelectedOptions
+				renderInput={(params) => (
+					<TextField
+						{...params}
+						variant='outlined'
+						label='Tags'
+						placeholder='Genero'
+					/>
+				)}
+				onChange={(e, newValue) => tagsInputHandler(newValue)}
 			/>
 			<FormLabel component='legend' className={classes.filterLabel}>
 				LOCALIDAD:
 			</FormLabel>
-			<Typography>Mar del Plata</Typography>
+			<Typography style={{ margin: '15px 0' }}>Mar del Plata</Typography>
 			<FormLabel component='legend' className={classes.filterLabel}>
 				RESULTADOS: {orderedBooks ? orderedBooks.length : null}
 			</FormLabel>
@@ -368,18 +446,19 @@ const Books = () => {
 							target='_blank'
 						>
 							<CardMedia
-								className={classes.cardMedia}
+								classes={{ img: classes.image }}
 								image={book.pictures[0].image}
 								title={book.title + ' - ' + book.author}
+								component='img'
 							/>
 						</Button>
 						<CardContent className={classes.cardContent}>
-							<Typography gutterBottom variant='h5' component='h1'>
+							<Typography variant='h5' component='h1'>
 								${book.price}
 							</Typography>
 							<Typography>{book.title + ' - ' + book.author}</Typography>
 						</CardContent>
-						<CardActions>
+						<CardActions style={{ padding: '0px 10px' }}>
 							<Button
 								size='small'
 								color='primary'
