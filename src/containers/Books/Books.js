@@ -8,6 +8,7 @@ import {
 	CardActions,
 	CardContent,
 	CardMedia,
+	Drawer,
 	IconButton,
 	Grid,
 	Typography,
@@ -32,7 +33,26 @@ import * as actions from '../../store/actions/index';
 
 const useStyles = makeStyles((theme) => ({
 	root: {},
-	filter: {},
+	drawer: {
+		color: 'green !important',
+		flexShrink: 0,
+		width: theme.drawer.width,
+		overflow: 'auto',
+	},
+	drawerPaper: {
+		background: '#263238',
+		width: theme.drawer.width,
+		color: '#ccc',
+	},
+	filter: {
+		[theme.breakpoints.up('xs')]: {
+			width: '100%',
+		},
+		[theme.breakpoints.down('xs')]: {
+			width: '100%',
+			padding: '15px 15%',
+		},
+	},
 	filterLabel: {
 		padding: '5px 0px',
 		margin: '0px 0px',
@@ -102,6 +122,7 @@ const Books = () => {
 
 	const [currentBooks, setCurrentBooks] = useState();
 	const [orderedBooks, setOrderedBooks] = useState();
+	const [drawer, setDrawer] = useState(false);
 	const [search, setSearch] = useState('');
 	const [order, setOrder] = useState(0);
 	const [page, setPage] = useState(1);
@@ -301,8 +322,12 @@ const Books = () => {
 		);
 	};
 
+	const toggleDrawerHandler = () => {
+		setDrawer(!drawer);
+	};
+
 	let filterBar = (
-		<div>
+		<div className={classes.filter}>
 			<CssBaseline />
 			<FormLabel component='legend' className={classes.filterLabel}>
 				ORDENAR POR:
@@ -347,7 +372,9 @@ const Books = () => {
 				fullWidth
 				id='tags'
 				value={selectedTags}
-				options={tags}
+				options={tags.sort((a, b) => {
+					return a.title > b.title ? 1 : b.title > a.title ? -1 : 0;
+				})}
 				getOptionLabel={(tags) => capitalizeText(tags.title)}
 				filterSelectedOptions
 				renderInput={(params) => (
@@ -407,7 +434,7 @@ const Books = () => {
 					color='primary'
 					size='small'
 					className={classes.filterIcon}
-					// onClick={() => console.log('Test')}
+					onClick={toggleDrawerHandler}
 				>
 					<Menu style={{ fontSize: 35 }} />
 				</IconButton>
@@ -472,11 +499,26 @@ const Books = () => {
 			);
 		});
 
+	const container = window !== undefined ? window.document.body : undefined;
+
 	return (
 		<div className={classes.root}>
 			<CssBaseline />
 			{loading && <LinearProgress className={classes.progress} />}
 			<Container className={classes.container}>
+				<Hidden xsUp implementation='css'>
+					<Drawer
+						container={container}
+						variant='temporary'
+						anchor='left'
+						className={classes.drawer}
+						classes={{ paper: classes.drawerPaper }}
+						open={drawer}
+						onClose={toggleDrawerHandler}
+					>
+						{filterBar}
+					</Drawer>
+				</Hidden>
 				<Grid
 					container
 					direction='row'
