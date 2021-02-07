@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
 		width: '100%',
 	},
 	image: {
-		height: '19vh',
+		height: '18vh',
 		width: 'auto',
 	},
 	mediaButton: {

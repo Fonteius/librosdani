@@ -2,12 +2,12 @@ import React, { Suspense, lazy, useEffect, useCallback } from 'react';
 import { Route, Switch, Redirect, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { LinearProgress, Toolbar } from '@material-ui/core';
-import Main from './containers/Main/Main';
 import Layout from './hoc/Layout/Layout';
 import Login from './containers/Auth/Login';
 import Signup from './containers/Auth/Signup';
 import Books from './containers/Books/Books';
 import Publish from './containers/Books/Publish/Publish';
+import Contact from './containers/Main/Contact/Contact';
 import * as actions from './store/actions/index';
 
 const User = lazy(() => import('./containers/User/User'));
@@ -45,8 +45,8 @@ const App = () => {
 				<Route path='/signup' component={Signup} />
 				<Route path='/book/:bookId/:title?' component={Book} />
 				<Route path='/books' component={Books} />
-				<Route path='/' exact component={Main} />
-				<Redirect to='/' />
+				<Route path='/contact' component={Contact} />
+				<Redirect to='/books' />
 			</Switch>
 		</Suspense>
 	);
@@ -60,8 +60,8 @@ const App = () => {
 					<Route path='/publish' component={Publish} />
 					<Route path='/book/:bookId/:title?' component={Book} />
 					<Route path='/books' component={Books} />
-					<Route path='/' exact component={Main} />
-					<Redirect to='/' />
+					<Route path='/contact' component={Contact} />
+					<Redirect to='/books' />
 				</Switch>
 			</Suspense>
 		);

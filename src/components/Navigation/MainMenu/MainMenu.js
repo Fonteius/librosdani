@@ -17,6 +17,8 @@ import {
 	ClickAwayListener,
 	colors,
 	Hidden,
+	Tabs,
+	Tab,
 } from '@material-ui/core';
 import { Menu as MenuIcon } from '@material-ui/icons';
 
@@ -33,13 +35,16 @@ const useStyles = makeStyles((theme) => ({
 	},
 	title: {
 		paddingLeft: theme.spacing(8),
-		// paddingRight: theme.spacing(15),
-		flexGrow: 1,
+		paddingRight: theme.spacing(15),
+		flexGrow: 0,
 		color: theme.palette.primary.main,
 		textDecoration: 'none',
+		[theme.breakpoints.down('sm')]: {
+			padding: theme.spacing(0, 0, 0),
+		},
 	},
 	menuButton: {
-		[theme.breakpoints.up('lg')]: {
+		[theme.breakpoints.up('sm')]: {
 			display: 'none',
 		},
 	},
@@ -49,10 +54,6 @@ const useStyles = makeStyles((theme) => ({
 		textTransform: 'capitalize',
 		marginRight: theme.spacing(2),
 		borderRadius: '25px',
-	},
-	navLinks: {
-		letterSpacing: '1px',
-		flexGrow: 1,
 	},
 	icons: {
 		color: 'green',
@@ -64,6 +65,19 @@ const useStyles = makeStyles((theme) => ({
 	},
 	paper: {
 		marginRight: theme.spacing(2),
+		display: 'flex',
+		alignItems: 'center',
+		minHeight: 'inherit',
+		backgroundColor: 'white',
+		color: '#00BAFF',
+		border: 'none',
+		boxShadow: 'none',
+		flexGrow: 1,
+	},
+	tabs: {
+		minHeight: 'inherit',
+		display: 'flex',
+		alignItems: 'center',
 	},
 	green: {
 		color: theme.palette.getContrastText(colors.green[500]),
@@ -73,12 +87,21 @@ const useStyles = makeStyles((theme) => ({
 
 const MainMenu = (props) => {
 	const [menuOpen, setMenuOpen] = useState(false);
+	const [tabValue, setTabValue] = useState(0);
 	const menuAnchorRef = useRef();
 	const prevOpen = useRef(menuOpen);
 	const isAuthenticated = useSelector((state) => state.auth.idToken !== null);
 	const { username, email, avatar } = useSelector((state) => state.auth);
 	const history = useHistory();
 	const classes = useStyles();
+
+	useEffect(() => {
+		if (prevOpen.current === true && menuOpen === false) {
+			menuAnchorRef.current.focus();
+		}
+		prevOpen.current = menuOpen;
+	}, [menuOpen]);
+
 	const menuToggleHandler = () => {
 		setMenuOpen((prevOpen) => !prevOpen);
 	};
@@ -97,23 +120,36 @@ const MainMenu = (props) => {
 		}
 	};
 
-	useEffect(() => {
-		if (prevOpen.current === true && menuOpen === false) {
-			menuAnchorRef.current.focus();
-		}
-		prevOpen.current = menuOpen;
-	}, [menuOpen]);
+	const tabsChangeHandler = (e, newValue) => {
+		setTabValue(newValue);
+	};
 
 	let navLinks = (
-		<Fragment>
-			<Typography
-				component={NavLink}
-				to='/books'
-				className={`${classes.buttons} ${classes.navLinks}`}
+		<Paper square className={classes.paper}>
+			<Tabs
+				className={classes.tabs}
+				classes={{ flexContainer: classes.tabs, fixed: classes.tabs }}
+				value={tabValue}
+				onChange={tabsChangeHandler}
+				indicatorColor='primary'
+				variant='fullWidth'
 			>
-				LIBROS
-			</Typography>
-		</Fragment>
+				<Tab
+					className={classes.tabs}
+					label='LIBROS'
+					component={NavLink}
+					to='/books'
+					id='nav-tab-books'
+				/>
+				<Tab
+					className={classes.tabs}
+					label='CONTACTO'
+					component={NavLink}
+					to='/'
+					id='nav-tab-contact'
+				/>
+			</Tabs>
+		</Paper>
 	);
 
 	let authLinks = (
@@ -140,22 +176,38 @@ const MainMenu = (props) => {
 	);
 	if (isAuthenticated) {
 		navLinks = (
-			<Fragment>
-				<Typography
-					component={NavLink}
-					to='/books'
-					className={`${classes.buttons} ${classes.navLinks}`}
+			<Paper square className={classes.paper}>
+				<Tabs
+					className={classes.tabs}
+					classes={{ flexContainer: classes.tabs, fixed: classes.tabs }}
+					value={tabValue}
+					onChange={tabsChangeHandler}
+					indicatorColor='primary'
+					variant='fullWidth'
 				>
-					LIBROS
-				</Typography>
-				<Typography
-					component={NavLink}
-					to='/publish'
-					className={`${classes.buttons} ${classes.navLinks}`}
-				>
-					PUBLICAR
-				</Typography>
-			</Fragment>
+					<Tab
+						label='LIBROS'
+						className={classes.tabs}
+						component={NavLink}
+						to='/books'
+						id='nav-tab-books'
+					/>
+					<Tab
+						className={classes.tabs}
+						label='PUBLICAR'
+						component={NavLink}
+						to='/publish'
+						id='nav-tab-publish'
+					/>
+					<Tab
+						className={classes.tabs}
+						label='CONTACTO'
+						component={NavLink}
+						to='/contact'
+						id='nav-tab-contact'
+					/>
+				</Tabs>
+			</Paper>
 		);
 		authLinks = (
 			<Fragment>
@@ -238,12 +290,7 @@ const MainMenu = (props) => {
 					>
 						<MenuIcon />
 					</IconButton>
-					<Typography
-						variant='h6'
-						component={NavLink}
-						to='/'
-						className={classes.title}
-					>
+					<Typography variant='h6' className={classes.title}>
 						Libros Dani
 					</Typography>
 					<Hidden xsDown>

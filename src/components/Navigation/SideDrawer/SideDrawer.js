@@ -44,9 +44,19 @@ const SideDrawer = (props) => {
 
 	const isAuthenticated = useSelector((state) => state.auth.idToken !== null);
 	const classes = useStyles();
-	let links = ['/', 'Books', 'Login', 'Signup'];
+	let links = [
+		{ title: 'LIBROS', link: 'Books' },
+		{ title: 'CONTACTO', link: 'Contact' },
+		{ title: 'INGRESAR', link: 'Login' },
+		{ title: 'REGISTRARSE', link: 'Signup' },
+	];
 	if (isAuthenticated) {
-		links = ['/', 'Books', 'Publish', 'Logout'];
+		links = [
+			{ title: 'LIBROS', link: 'Books' },
+			{ title: 'CONTACTO', link: 'Contact' },
+			{ title: 'PUBLICAR', link: 'Publish' },
+			{ title: 'SALIR', link: 'Logout' },
+		];
 	}
 
 	const getNavIcon = (text) => {
@@ -74,16 +84,20 @@ const SideDrawer = (props) => {
 				{links.map((text, index) => (
 					<ListItem
 						button
-						key={text}
+						key={text.title}
 						component={NavLink}
 						to={
-							text !== '/' ? `/${text.toLowerCase()}` : `${text.toLowerCase()}`
+							text.link !== '/'
+								? `/${text.link.toLowerCase()}`
+								: `${text.link.toLowerCase()}`
 						}
 						onClick={props.toggleDrawer}
 					>
-						<ListItemIcon>{getNavIcon(text)}</ListItemIcon>
+						<ListItemIcon>{getNavIcon(text.link)}</ListItemIcon>
 						<ListItemText
-							primary={text !== '/' ? text.toUpperCase() : 'HOME'}
+							primary={
+								text.link !== '/' ? text.title.toUpperCase() : 'CONTACTO'
+							}
 						/>
 					</ListItem>
 				))}

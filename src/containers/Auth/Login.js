@@ -88,10 +88,10 @@ const Login = () => {
 							margin='normal'
 							required
 							inputRef={register({
-								required: 'Email is Required.',
+								required: 'Se requiere dirección de Email.',
 								pattern: {
 									value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-									message: 'Invalid Email Address.',
+									message: 'Se requiere una dirección de Email valida.',
 								},
 							})}
 							fullWidth
@@ -111,10 +111,10 @@ const Login = () => {
 							margin='normal'
 							required
 							inputRef={register({
-								required: 'Password is Required.',
+								required: 'Se requiere contraseña.',
 								minLength: {
 									value: 6,
-									message: 'Password is too short.',
+									message: 'La contraseña es muy corta.',
 								},
 							})}
 							fullWidth

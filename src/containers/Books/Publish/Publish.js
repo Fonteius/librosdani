@@ -395,7 +395,9 @@ const Publish = () => {
 							multiple
 							id='tags'
 							value={selectedTags}
-							options={tags}
+							options={tags.sort((a, b) => {
+								return a.title > b.title ? 1 : b.title > a.title ? -1 : 0;
+							})}
 							getOptionLabel={(tags) => capitalizeText(tags.title)}
 							filterSelectedOptions
 							renderInput={(params) => (

@@ -80,7 +80,7 @@ const Main = (props) => {
 					<Typography variant='body2' color='textSecondary'>
 						<Link
 							color='inherit'
-							href='https://libros-dani.web.app/'
+							href='https://libros-dani.web.app/books'
 							target='_blank'
 						>
 							Libros Dani
