@@ -145,7 +145,7 @@ const MainMenu = (props) => {
 					className={classes.tabs}
 					label='CONTACTO'
 					component={NavLink}
-					to='/'
+					to='/contact'
 					id='nav-tab-contact'
 				/>
 			</Tabs>
