@@ -18,14 +18,13 @@ const App = () => {
 	const location = useLocation();
 	const dispatch = useDispatch();
 	const isAuthenticated = useSelector((state) => state.auth.idToken !== null);
-	const onTryAutoSignup = useCallback(
-		() => dispatch(actions.authCheckState()),
-		[dispatch]
-	);
+	const onTryAutoLogin = useCallback(() => dispatch(actions.autoLogin()), [
+		dispatch,
+	]);
 
 	useEffect(() => {
-		onTryAutoSignup();
-	}, [onTryAutoSignup]);
+		onTryAutoLogin();
+	}, [onTryAutoLogin]);
 
 	// Check existence of Horizontal Scrollbar based on difference of html width and window width.
 	// useEffect(() => {

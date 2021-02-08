@@ -7,17 +7,9 @@ export {
 	signupStart,
 	signupSuccess,
 	signupFail,
-	authStart,
-	authSuccess,
-	authFail,
-	logoutSucceed,
-	setAuthRedirectPath,
 	logout,
-	checkAuthTimeout,
-	auth,
-	authCheckState,
-	authCheckUsernameAvailability,
-	setUsernameAvailability,
+	logoutSucceed,
+	autoLogin,
 } from './auth';
 
 export {

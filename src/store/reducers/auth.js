@@ -8,8 +8,6 @@ const initialState = {
 	avatar: null,
 	error: null,
 	loading: false,
-	authRedirectPath: '/books',
-	usernameAvailable: true,
 };
 
 const reducer = (state = initialState, action) => {
@@ -60,30 +58,7 @@ const reducer = (state = initialState, action) => {
 				error: action.error,
 				loading: false,
 			};
-		case actionTypes.AUTH_START:
-			return {
-				...state,
-				error: null,
-				loading: true,
-			};
-		case actionTypes.AUTH_SUCCESS:
-			return {
-				...state,
-				username: action.username,
-				email: action.email,
-				idToken: action.idToken,
-				userId: action.userId,
-				avatar: action.avatar,
-				error: null,
-				loading: false,
-			};
-		case actionTypes.AUTH_FAIL:
-			return {
-				...state,
-				error: action.error,
-				loading: false,
-			};
-		case actionTypes.AUTH_LOGOUT:
+		case actionTypes.LOGOUT_SUCCESS:
 			return {
 				...state,
 				username: null,
@@ -91,16 +66,6 @@ const reducer = (state = initialState, action) => {
 				idToken: null,
 				userId: null,
 				avatar: null,
-			};
-		case actionTypes.SET_AUTH_REDIRECT_PATH:
-			return {
-				...state,
-				authRedirectPath: action.path,
-			};
-		case actionTypes.SET_USERNAME_AVAILABILITY:
-			return {
-				...state,
-				usernameAvailable: action.available,
 			};
 		default:
 			return state;

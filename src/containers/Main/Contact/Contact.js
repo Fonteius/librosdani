@@ -16,13 +16,17 @@ import {
 	CircularProgress,
 	Link,
 } from '@material-ui/core';
-import { Email } from '@material-ui/icons';
-import { Alert, Autocomplete } from '@material-ui/lab';
+import { EmailOutlined } from '@material-ui/icons';
+import { Alert } from '@material-ui/lab';
 import { Facebook, WhatsApp, MailOutline } from '@material-ui/icons/';
 import * as actions from '../../../store/actions/index';
 
 const useStyles = makeStyles((theme) => ({
 	root: {},
+	avatar: {
+		margin: theme.spacing(1),
+		backgroundColor: theme.palette.primary.main,
+	},
 	paper: {
 		marginTop: theme.spacing(2),
 		display: 'flex',
@@ -75,7 +79,7 @@ const Contact = () => {
 				<CssBaseline />
 				<div className={classes.paper}>
 					<Avatar className={classes.avatar}>
-						<Email />
+						<EmailOutlined />
 					</Avatar>
 					<Typography component='h1' variant='h5'>
 						Enviar Mensaje

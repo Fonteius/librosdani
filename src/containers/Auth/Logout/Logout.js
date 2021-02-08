@@ -10,7 +10,7 @@ const Logout = () => {
 		onLogout();
 	}, [onLogout]);
 
-	return <Redirect to='/' />;
+	return <Redirect to='/books' />;
 };
 
 export default Logout;

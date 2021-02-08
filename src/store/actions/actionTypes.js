@@ -1,4 +1,5 @@
-// REPLACEMENT
+// AUTH
+
 export const LOGIN = 'LOGIN';
 export const LOGIN_START = 'LOGIN_START';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -9,21 +10,10 @@ export const SIGNUP_START = 'SIGNUP_START';
 export const SIGNUP_SUCCESS = 'SIGNUP_SUCCESS';
 export const SIGNUP_FAIL = 'SIGNUP_FAIL';
 
-// Redux
-export const AUTH_START = 'AUTH_START';
-export const AUTH_SUCCESS = 'AUTH_SUCCESS';
-export const AUTH_FAIL = 'AUTH_FAIL';
-export const AUTH_LOGOUT = 'AUTH_LOGOUT';
-export const SET_AUTH_REDIRECT_PATH = 'SET_AUTH_REDIRECT_PATH';
+export const LOGOUT = 'LOGOUT';
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 
-// Sagas
-export const AUTH_INITIATE_LOGOUT = 'AUTH_INITIATE_LOGOUT';
-export const AUTH_CHECK_TIMEOUT = 'AUTH_CHECK_TIMEOUT';
-export const AUTH_USER = 'AUTH_USER';
-export const AUTH_CHECK_STATE = 'AUTH_CHECK_STATE';
-export const AUTH_CHECK_USERNAME_AVAILABILITY =
-	'AUTH_CHECK_USERNAME_AVAILABILITY';
-export const SET_USERNAME_AVAILABILITY = 'SET_USERNAME_AVAILABILITY';
+export const AUTO_LOGIN = 'AUTO_LOGIN';
 
 // BOOKS
 
@@ -61,3 +51,10 @@ export const FETCH_TAGS = 'FETCH_TAGS';
 export const FETCH_TAGS_START = 'FETCH_TAGS_START';
 export const FETCH_TAGS_SUCCESS = 'FETCH_TAGS_SUCCESS';
 export const FETCH_TAGS_FAIL = 'FETCH_TAGS_FAIL';
+
+// CHATS
+
+export const ADD_CHAT = 'ADD_CHAT';
+export const ADD_CHAT_START = 'ADD_CHAT_START';
+export const ADD_CHAT_SUCCESS = 'ADD_CHAT_SUCCESS';
+export const ADD_CHAT_FAIL = 'ADD_CHAT_FAIL';
