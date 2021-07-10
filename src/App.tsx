@@ -2,22 +2,23 @@ import React, { Suspense, lazy, useEffect, useCallback } from 'react';
 import { Route, Switch, Redirect, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { LinearProgress, Toolbar } from '@material-ui/core';
-import Layout from './hoc/Layout/Layout';
-import Login from './containers/Auth/Login';
-import Signup from './containers/Auth/Signup';
-import Books from './containers/Books/Books';
-import Publish from './containers/Books/Publish/Publish';
-import Contact from './containers/Main/Contact/Contact';
-import * as actions from './store/actions/index';
+import { isAuthenticatedSelector } from 'src/store/rootSelector';
+import Layout from 'src/hoc/Layout/Layout';
+import Login from 'src/containers/Auth/Login';
+import Signup from 'src/containers/Auth/Signup';
+import Books from 'src/containers/Books/Books';
+import Publish from 'src/containers/Books/Publish/Publish';
+import Contact from 'src/containers/Main/Contact/Contact';
+import * as actions from 'src/store/actions/index';
 
-const User = lazy(() => import('./containers/User/User'));
-const Logout = lazy(() => import('./containers/Auth/Logout/Logout'));
-const Book = lazy(() => import('./containers/Books/Book/Book'));
+const User = lazy(() => import('src/containers/User/User'));
+const Logout = lazy(() => import('src/containers/Auth/Logout/Logout'));
+const Book = lazy(() => import('src/containers/Books/Book/Book'));
 
 const App = () => {
 	const location = useLocation();
 	const dispatch = useDispatch();
-	const isAuthenticated = useSelector((state) => state.auth.idToken !== null);
+	const isAuthenticated = useSelector(isAuthenticatedSelector);
 	const onTryAutoLogin = useCallback(() => dispatch(actions.autoLogin()), [
 		dispatch,
 	]);
@@ -40,8 +41,11 @@ const App = () => {
 	let routes = (
 		<Suspense fallback={<LinearProgress />}>
 			<Switch>
-				<Route path='/login' component={Login} />
-				<Route path='/signup' component={Signup} />
+				{!isAuthenticated ? <Route path='/signup' component={Signup} /> : null}
+				{!isAuthenticated ? <Route path='/login' component={Login} /> : null}
+				{isAuthenticated ? <Route path='/logout' component={Logout} /> : null}
+				{isAuthenticated ? <Route path='/user' component={User} /> : null}
+				{isAuthenticated ? <Route path='/publish' component={Publish} /> : null}
 				<Route path='/book/:bookId/:title?' component={Book} />
 				<Route path='/books' component={Books} />
 				<Route path='/contact' component={Contact} />
@@ -49,22 +53,6 @@ const App = () => {
 			</Switch>
 		</Suspense>
 	);
-
-	if (isAuthenticated) {
-		routes = (
-			<Suspense fallback={<LinearProgress />}>
-				<Switch>
-					<Route path='/logout' component={Logout} />
-					<Route path='/user' component={User} />
-					<Route path='/publish' component={Publish} />
-					<Route path='/book/:bookId/:title?' component={Book} />
-					<Route path='/books' component={Books} />
-					<Route path='/contact' component={Contact} />
-					<Redirect to='/books' />
-				</Switch>
-			</Suspense>
-		);
-	}
 
 	const toolbar = location.pathname !== '/' ? <Toolbar /> : null;
 
